@@ -522,7 +522,7 @@
             border-color: var(--accent-purple);
         }
         
-        /* Админ панель */
+        /* Ад��ин панель */
         .admin-panel {
             position: fixed;
             top: 100px;
@@ -900,8 +900,11 @@
     </button>
 
     <script>
+        // Ключ для хранения видео в localStorage
+        const STORAGE_KEY = 'shadowTubeVideos';
+        
         // Хранилище для видео
-        let videos = JSON.parse(localStorage.getItem('shadowTubeVideos')) || [];
+        let videos = [];
         
         // Состояние админа
         let isAdmin = localStorage.getItem('shadowTubeAdmin') === 'true';
@@ -935,6 +938,32 @@
         const passwordSubmit = document.getElementById('passwordSubmit');
         const passwordError = document.getElementById('passwordError');
         const adminBtn = document.getElementById('adminBtn');
+        
+        // Загрузка видео из localStorage
+        function loadVideos() {
+            const storedVideos = localStorage.getItem(STORAGE_KEY);
+            videos = storedVideos ? JSON.parse(storedVideos) : [];
+            displayVideos(videos);
+        }
+        
+        // Сохранение видео в localStorage
+        function saveVideos() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+        }
+        
+        // Проверка новых видео каждые 5 секунд
+        function startVideoSync() {
+            setInterval(() => {
+                const storedVideos = localStorage.getItem(STORAGE_KEY);
+                if (storedVideos) {
+                    const parsedVideos = JSON.parse(storedVideos);
+                    if (JSON.stringify(parsedVideos) !== JSON.stringify(videos)) {
+                        videos = parsedVideos;
+                        displayVideos(videos);
+                    }
+                }
+            }, 5000);
+        }
         
         // Показать/скрыть форму загрузки
         uploadBtn.addEventListener('click', () => {
@@ -981,8 +1010,13 @@
                     isAdminUpload: isAdmin // Добавляем метку, если загружено админом
                 };
                 
-                videos.unshift(videoData); // Добавляем в начало массива
-                localStorage.setItem('shadowTubeVideos', JSON.stringify(videos));
+                // Загружаем текущие видео, чтобы не перезаписать чужие
+                const currentVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                currentVideos.unshift(videoData); // Добавляем в начало массива
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentVideos));
+                
+                // Обновляем локальное состояние
+                videos = currentVideos;
                 
                 // Очищаем форму
                 videoForm.reset();
@@ -1216,7 +1250,7 @@
         function openVideoModal(video) {
             // Увеличиваем количество просмотров
             video.views++;
-            localStorage.setItem('shadowTubeVideos', JSON.stringify(videos));
+            saveVideos();
             
             const uploadDate = new Date(video.uploadDate);
             const formattedDate = uploadDate.toLocaleDateString('ru-RU', {
@@ -1226,7 +1260,7 @@
             });
             
             modalVideoPlayer.src = video.data;
-            modalVideoTitle.textContent = video.title + (video.isAdminUpload ? ' <span class="admin-badge"><i class="fas fa-check-circle admin-checkmark"></i>Владелец</span>' : '');
+            modalVideoTitle.innerHTML = video.title + (video.isAdminUpload ? ' <span class="admin-badge"><i class="fas fa-check-circle admin-checkmark"></i>Владелец</span>' : '');
             modalVideoViews.innerHTML = `<i class="fas fa-eye"></i> ${video.views} просмотров`;
             modalVideoDate.textContent = formattedDate;
             modalVideoSize.textContent = video.size;
@@ -1305,7 +1339,7 @@
         
         function deleteVideo(videoId) {
             videos = videos.filter(video => video.id !== videoId);
-            localStorage.setItem('shadowTubeVideos', JSON.stringify(videos));
+            saveVideos();
             displayVideos(videos);
         }
         
@@ -1388,7 +1422,8 @@
         
         // Инициализация при загрузке страницы
         window.onload = function() {
-            displayVideos(videos);
+            loadVideos();
+            startVideoSync();
             
             // Проверяем URL на наличие параметра video
             const urlParams = new URLSearchParams(window.location.search);
@@ -1420,4 +1455,4 @@
         });
     </script>
 </body>
-  </html>
+                    </html>
