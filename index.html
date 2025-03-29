@@ -510,6 +510,13 @@
             padding: 2rem;
             color: var(--text-gray);
         }
+        
+        .upload-status {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -554,6 +561,8 @@
                     </label>
                 </div>
                 
+                <div class="upload-status" id="upload-status"></div>
+                
                 <button type="submit" class="submit-btn">Опубликовать</button>
             </form>
         </div>
@@ -584,10 +593,11 @@
                     description: "Это пример описания для демонстрационного видео на ShadowTube",
                     views: 1200,
                     likes: 245,
-                    date: "2 дня назад",
-                    thumbnail: "https://i.imgur.com/5q6ZfLJ.jpg",
+                    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                    thumbnail: "",
                     src: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-                    liked: false
+                    liked: false,
+                    thumbnailBlob: ""
                 },
                 {
                     id: (Date.now() + 1).toString(),
@@ -595,10 +605,11 @@
                     description: "Исследование малоизвестных частей сети",
                     views: 3700,
                     likes: 512,
-                    date: "5 дней назад",
-                    thumbnail: "https://i.imgur.com/JzVS7Uj.jpg",
+                    date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                    thumbnail: "",
                     src: "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
-                    liked: false
+                    liked: false,
+                    thumbnailBlob: ""
                 },
                 {
                     id: (Date.now() + 2).toString(),
@@ -606,10 +617,11 @@
                     description: "Красивые кадры заката с фиолетовым небом",
                     views: 8100,
                     likes: 1200,
-                    date: "1 неделю назад",
-                    thumbnail: "https://i.imgur.com/8yJQ7ZP.jpg",
+                    date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    thumbnail: "",
                     src: "https://samplelib.com/lib/preview/mp4/sample-15s.mp4",
-                    liked: false
+                    liked: false,
+                    thumbnailBlob: ""
                 }
             ];
             localStorage.setItem(STORAGE_KEY, JSON.stringify(initialVideos));
@@ -629,6 +641,7 @@
         const playerCloseBtn = document.getElementById('player-close-btn');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
+        const uploadStatus = document.getElementById('upload-status');
         
         // Текущее воспроизводимое видео
         let currentVideo = null;
@@ -669,9 +682,10 @@
         }
         
         // Форматирование даты
-        function formatDate(date) {
+        function formatDate(dateString) {
+            const date = new Date(dateString);
             const now = new Date();
-            const diff = now - new Date(date);
+            const diff = now - date;
             
             const seconds = Math.floor(diff / 1000);
             const minutes = Math.floor(seconds / 60);
@@ -679,7 +693,7 @@
             const days = Math.floor(hours / 24);
             
             if (days > 7) {
-                return new Date(date).toLocaleDateString();
+                return date.toLocaleDateString();
             } else if (days > 0) {
                 return `${days} ${days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'} назад`;
             } else if (hours > 0) {
@@ -689,6 +703,37 @@
             } else {
                 return 'только что';
             }
+        }
+        
+        // Генерация превью из видео
+        function generateThumbnail(videoFile) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                video.src = URL.createObjectURL(videoFile);
+                
+                video.addEventListener('loadedmetadata', () => {
+                    // Устанавливаем время для захвата кадра (первый кадр)
+                    video.currentTime = 0;
+                });
+                
+                video.addEventListener('seeked', () => {
+                    // Рисуем кадр на canvas
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    // Преобразуем canvas в Blob
+                    canvas.toBlob((blob) => {
+                        const thumbnailUrl = URL.createObjectURL(blob);
+                        resolve({ blob, url: thumbnailUrl });
+                    }, 'image/jpeg', 0.8);
+                });
+                
+                video.load();
+            });
         }
         
         // Отображение всех видео
@@ -706,7 +751,7 @@
                 videoCard.setAttribute('data-id', video.id);
                 videoCard.innerHTML = `
                     <div class="video-thumbnail-container">
-                        <img class="video-thumbnail" src="${video.thumbnail}" alt="${video.title}">
+                        <img class="video-thumbnail" src="${video.thumbnail || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogIzBhMGEwYSI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiM3YTJjYmYiIG9wYWNpdHk9IjAuMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZjhmOWZhIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiPk5vIFByZXZpZXc8L3RleHQ+PC9zdmc+'}" alt="${video.title}">
                         <div class="play-icon"></div>
                     </div>
                     <div class="video-info">
@@ -748,7 +793,7 @@
             if (video) {
                 currentVideo = video;
                 videoPlayer.src = video.src;
-                videoPlayer.poster = video.thumbnail;
+                videoPlayer.poster = video.thumbnail || '';
                 videoPlayerModal.classList.add('active');
                 videoPlayer.play();
                 
@@ -812,7 +857,7 @@
         }
         
         // Добавление нового видео
-        videoUploadForm.addEventListener('submit', (e) => {
+        videoUploadForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const title = document.getElementById('video-title').value;
@@ -824,40 +869,87 @@
                 return;
             }
             
-            // Генерация превью (в реальном приложении нужно использовать API для создания скриншотов)
-            const thumbnail = "https://i.imgur.com/5q6ZfLJ.jpg"; // Заглушка
+            // Показываем статус загрузки
+            uploadStatus.textContent = 'Генерация превью...';
+            uploadStatus.style.color = 'var(--text-gray)';
             
-            const newVideo = {
-                id: Date.now().toString(),
-                title: title,
-                description: description,
-                views: 0,
-                likes: 0,
-                date: new Date().toISOString(),
-                thumbnail: thumbnail,
-                src: URL.createObjectURL(file),
-                liked: false
-            };
-            
-            const videos = JSON.parse(localStorage.getItem(STORAGE_KEY));
-            videos.unshift(newVideo);
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-            
-            // Очистка формы
-            videoUploadForm.reset();
-            fileLabel.textContent = "Перетащите видео сюда или нажмите для выбора\nМаксимальный размер: 100MB";
-            
-            // Закрытие модального окна
-            uploadModal.classList.remove('active');
-            
-            // Обновление списка видео
-            displayVideos(videos);
+            try {
+                // Генерируем превью из первого кадра видео
+                const { blob: thumbnailBlob, url: thumbnailUrl } = await generateThumbnail(file);
+                
+                // Создаем объект видео
+                const newVideo = {
+                    id: Date.now().toString(),
+                    title: title,
+                    description: description,
+                    views: 0,
+                    likes: 0,
+                    date: new Date().toISOString(),
+                    thumbnail: thumbnailUrl,
+                    src: URL.createObjectURL(file),
+                    liked: false,
+                    thumbnailBlob: await blobToBase64(thumbnailBlob)
+                };
+                
+                // Получаем текущие видео из хранилища
+                const videos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                videos.unshift(newVideo);
+                
+                // Сохраняем обновленный список
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+                
+                // Очистка формы
+                videoUploadForm.reset();
+                fileLabel.textContent = "Перетащите видео сюда или нажмите для выбора\nМаксимальный размер: 100MB";
+                
+                // Успешный статус
+                uploadStatus.textContent = 'Видео успешно загружено!';
+                uploadStatus.style.color = 'var(--purple-light)';
+                
+                // Закрытие модального окна через 1 секунду
+                setTimeout(() => {
+                    uploadModal.classList.remove('active');
+                    uploadStatus.textContent = '';
+                }, 1000);
+                
+                // Обновление списка видео
+                displayVideos(videos);
+            } catch (error) {
+                console.error('Ошибка при генерации превью:', error);
+                uploadStatus.textContent = 'Ошибка при загрузке видео';
+                uploadStatus.style.color = 'var(--red-alert)';
+            }
         });
+        
+        // Преобразование Blob в base64
+        function blobToBase64(blob) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result);
+                };
+                reader.readAsDataURL(blob);
+            });
+        }
+        
+        // Восстановление превью из base64 при загрузке страницы
+        function restoreThumbnails() {
+            const videos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            
+            videos.forEach(video => {
+                if (video.thumbnailBlob && !video.thumbnail) {
+                    video.thumbnail = video.thumbnailBlob;
+                }
+            });
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
+            return videos;
+        }
         
         // Поиск видео
         searchInput.addEventListener('input', () => {
             const searchTerm = searchInput.value.toLowerCase();
-            const videos = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            const videos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
             
             if (searchTerm === '') {
                 displayVideos(videos);
@@ -874,7 +966,7 @@
         
         // Инициализация при загрузке страницы
         window.addEventListener('DOMContentLoaded', () => {
-            const videos = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            const videos = restoreThumbnails();
             displayVideos(videos);
         });
     </script>
