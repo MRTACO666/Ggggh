@@ -847,7 +847,7 @@
         }
         
         // Показать медиа (фото/видео)
-        async function showMedia(id) {
+        async function showMedia(id, autoplay = false) {
             try {
                 const file = await getFileById(id);
                 if (!file) {
@@ -870,13 +870,16 @@
                     video.src = file.data;
                     video.controls = true;
                     video.style.width = '100%';
+                    if (autoplay) {
+                        video.autoplay = true;
+                    }
                     mediaContent.appendChild(video);
                     
                     // Показываем элементы управления для видео
                     mediaControls.style.display = 'flex';
                     
                     // Обработчики для кнопок управления видео
-                    let isPlaying = false;
+                    let isPlaying = autoplay;
                     let isMuted = false;
                     
                     playPauseBtn.addEventListener('click', () => {
@@ -920,6 +923,10 @@
                         isPlaying = false;
                         playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
                     });
+                    
+                    if (autoplay) {
+                        video.play().catch(e => console.log('Autoplay blocked:', e));
+                    }
                 } else {
                     showToast('Этот тип файла нельзя просмотреть', false);
                     return;
@@ -1104,6 +1111,40 @@
             sharedFilesModal.classList.add('show');
         }
         
+        // Проверить URL на наличие параметра для просмотра медиа
+        async function checkUrlForMediaView() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const sharedParam = urlParams.get('shared');
+            const viewParam = urlParams.get('view');
+            
+            if (viewParam) {
+                // Пытаемся открыть медиа сразу
+                try {
+                    await showMedia(viewParam, true);
+                    // Очищаем параметр из URL
+                    window.history.replaceState({}, document.title, window.location.pathname + window.location.search.replace(/&?view=[^&]*/, ''));
+                } catch (error) {
+                    console.error('Ошибка открытия медиа по ссылке:', error);
+                }
+            } else if (sharedParam) {
+                try {
+                    const decompressed = LZString.decompressFromEncodedURIComponent(sharedParam);
+                    const sharedFiles = JSON.parse(decompressed);
+                    
+                    if (sharedFiles && sharedFiles.length > 0) {
+                        // Показываем модальное окно с файлами
+                        showSharedFiles(sharedFiles);
+                        
+                        // Очищаем URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                } catch (error) {
+                    console.error('Ошибка обработки URL:', error);
+                    showToast('Ошибка загрузки общих файлов', false);
+                }
+            }
+        }
+        
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -1116,6 +1157,9 @@
                 // Загрузка файлов
                 await displayFiles();
                 await updateShareLink();
+                
+                // Проверить URL на наличие медиа для просмотра
+                await checkUrlForMediaView();
                 
                 // Обработчик формы
                 uploadForm.addEventListener('submit', async (e) => {
@@ -1204,28 +1248,6 @@
                         video.pause();
                     }
                 });
-                
-                // Проверка URL при загрузке
-                const urlParams = new URLSearchParams(window.location.search);
-                const sharedParam = urlParams.get('shared');
-                
-                if (sharedParam) {
-                    try {
-                        const decompressed = LZString.decompressFromEncodedURIComponent(sharedParam);
-                        const sharedFiles = JSON.parse(decompressed);
-                        
-                        if (sharedFiles && sharedFiles.length > 0) {
-                            // Показываем модальное окно с файлами
-                            showSharedFiles(sharedFiles);
-                            
-                            // Очищаем URL
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                        }
-                    } catch (error) {
-                        console.error('Ошибка обработки URL:', error);
-                        showToast('Ошибка загрузки общих файлов', false);
-                    }
-                }
                 
             } catch (error) {
                 console.error('Ошибка инициализации:', error);
