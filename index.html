@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShadowTube</title>
+    <title>ShadowTube PRO - P2P Video Sharing</title>
     <style>
         :root {
             --bg-dark: #121212;
@@ -32,25 +32,6 @@
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
-        }
-        
-        /* Прокрутка */
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: var(--bg-darker);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-purple);
-            border-radius: 5px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-purple-light);
         }
         
         .container {
@@ -314,22 +295,20 @@
             height: 180px;
             background-color: #000;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .video-thumbnail video {
+        .video-thumbnail img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
         
-        .video-thumbnail::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(transparent 60%, rgba(0, 0, 0, 0.7));
+        .video-thumbnail-placeholder {
+            font-size: 3rem;
+            color: var(--text-secondary);
         }
         
         .video-duration {
@@ -425,7 +404,6 @@
             font-weight: 500;
         }
         
-        /* Модальное окно просмотра видео */
         .video-modal {
             position: fixed;
             top: 0;
@@ -498,7 +476,6 @@
             justify-content: center;
         }
         
-        /* Фильтры */
         .filters {
             display: flex;
             gap: 15px;
@@ -522,201 +499,18 @@
             border-color: var(--accent-purple);
         }
         
-        /* Ад��ин панель */
-        .admin-panel {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            width: 300px;
-            background: var(--bg-darker);
-            border: 1px solid var(--accent-purple);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
-            z-index: 999;
-            display: none;
-        }
-        
-        .admin-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-            cursor: move;
-        }
-        
-        .admin-panel-title {
-            color: var(--accent-purple);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .admin-panel-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-        
-        .admin-panel-close:hover {
-            color: var(--accent-red);
-        }
-        
-        .admin-video-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-        }
-        
-        .admin-video-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #333;
-        }
-        
-        .admin-video-title {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 10px;
-        }
-        
-        .admin-delete-btn {
-            background: var(--accent-red);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 3px 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        
-        .admin-delete-btn:hover {
-            background: #ff1a4a;
-        }
-        
-        /* Парольная форма */
-        .password-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        
-        .password-form {
-            background: var(--bg-darker);
-            padding: 30px;
-            border-radius: 10px;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--accent-purple);
-        }
-        
-        .password-title {
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--accent-purple);
-        }
-        
-        .password-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            background: #222;
-            border: 1px solid #333;
-            border-radius: 5px;
-            color: white;
-            font-size: 1rem;
-        }
-        
-        .password-submit {
-            width: 100%;
-            padding: 12px;
-            background: var(--accent-purple);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        .password-submit:hover {
-            background: var(--accent-purple-light);
-        }
-        
-        .password-error {
-            color: var(--accent-red);
-            text-align: center;
-            margin-top: 10px;
-            display: none;
-        }
-        
-        /* Админ метка */
-        .admin-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            color: var(--accent-purple);
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        
-        .admin-checkmark {
-            color: var(--accent-purple);
-        }
-        
-        /* Кнопка админа */
-        .admin-btn {
+        .peer-count {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            left: 20px;
             background: var(--accent-purple);
             color: white;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
             z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
         
-        .admin-btn:hover {
-            background: var(--accent-purple-light);
-            transform: scale(1.1);
-        }
-        
-        /* Анимации */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .pulse {
-            animation: pulse 1.5s infinite;
-        }
-        
-        /* Адаптивность */
         @media (max-width: 768px) {
             .video-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -734,12 +528,6 @@
             
             .upload-form {
                 padding: 20px;
-            }
-            
-            .admin-panel {
-                width: 90%;
-                right: 5%;
-                top: 20%;
             }
         }
         
@@ -760,7 +548,7 @@
         <div class="container header-content">
             <a href="#" class="logo">
                 <i class="fas fa-photo-video logo-icon"></i>
-                <span>ShadowTube </span>
+                <span>ShadowTube PRO</span>
             </a>
             
             <div class="nav-links">
@@ -812,7 +600,7 @@
                         <label for="videoFile" class="file-input-label">
                             <i class="fas fa-file-video file-input-icon"></i>
                             <div class="file-input-text">Перетащите видео или нажмите для выбора</div>
-                            <div class="file-input-hint">MP4, WebM или MOV. Максимум 1GB</div>
+                            <div class="file-input-hint">MP4, WebM или MOV. Максимум 100MB</div>
                         </label>
                     </div>
                 </div>
@@ -833,27 +621,25 @@
         </div>
 
         <div id="videoContainer" class="video-grid">
-            <!-- Видео будут загружаться здесь -->
             <div class="no-videos">
-                <i class="fas fa-video-slash" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                <h3>Пока нет видео</h3>
-                <p>Будьте первым, кто загрузит видео!</p>
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <h3>Подключение к P2P сети...</h3>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно просмотра видео -->
     <div id="videoModal" class="video-modal">
         <button class="close-modal" id="closeModal">&times;</button>
-        <div class="video-player">
-            <video controls autoplay id="modalVideoPlayer">
-                Ваш браузер не поддерживает видео
-            </video>
+        <div class="video-player" id="videoPlayer">
+            <div style="color: white; text-align: center; padding: 50px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 3rem;"></i>
+                <p>Загрузка видео из P2P сети...</p>
+            </div>
         </div>
         <div class="video-info-modal">
             <h2 class="video-title-modal" id="modalVideoTitle"></h2>
             <div class="video-meta-modal">
-                <span id="modalVideoViews"></span>
+                <span id="modalVideoAuthor"></span>
                 <span id="modalVideoDate"></span>
                 <span id="modalVideoSize"></span>
             </div>
@@ -861,598 +647,305 @@
         </div>
     </div>
 
-    <!-- Админ панель -->
-    <div id="adminPanel" class="admin-panel">
-        <div class="admin-panel-header" id="adminPanelHeader">
-            <div class="admin-panel-title">
-                <i class="fas fa-user-shield"></i>
-                <span>Админ панель</span>
-            </div>
-            <button class="admin-panel-close" id="adminPanelClose">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="admin-video-list" id="adminVideoList">
-            <!-- Список видео для админа -->
-        </div>
-        <button id="logoutAdmin" class="submit-btn" style="margin-top: 0;">
-            <i class="fas fa-sign-out-alt"></i> Выйти
-        </button>
+    <div class="peer-count" id="peerCount">
+        <i class="fas fa-users"></i> <span>0</span> пиров в сети
     </div>
 
-    <!-- Форма ввода пароля -->
-    <div id="passwordModal" class="password-modal" style="display: none;">
-        <div class="password-form">
-            <h2 class="password-title">
-                <i class="fas fa-lock"></i> Введите пароль админа
-            </h2>
-            <input type="password" id="adminPassword" class="password-input" placeholder="Пароль">
-            <button id="passwordSubmit" class="password-submit">Войти</button>
-            <div id="passwordError" class="password-error">
-                <i class="fas fa-exclamation-circle"></i> Неверный пароль
-            </div>
-        </div>
-    </div>
-
-    <!-- Кнопка админа -->
-    <button id="adminBtn" class="admin-btn" title="Админ панель">
-        <i class="fas fa-user-shield"></i>
-    </button>
+    <!-- Подключаем необходимые библиотеки -->
+    <script src="https://cdn.jsdelivr.net/npm/webtorrent@latest/webtorrent.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
 
     <script>
-        // Ключ для хранения видео в localStorage
-        const STORAGE_KEY = 'shadowTubeVideos';
+        // Инициализация P2P компонентов
+        const client = new WebTorrent()
+        const gun = Gun({
+            peers: [
+                'https://gun-manhattan.herokuapp.com/gun',
+                'https://gun-us.herokuapp.com/gun'
+            ],
+            localStorage: false,
+            radisk: false
+        })
         
-        // Хранилище для видео
-        let videos = [];
-        
-        // Состояние админа
-        let isAdmin = localStorage.getItem('shadowTubeAdmin') === 'true';
+        // База данных видео
+        const videosDb = gun.get('shadowtube-v3').get('videos')
+        const peersDb = gun.get('shadowtube-v3').get('peers')
         
         // DOM элементы
-        const uploadBtn = document.getElementById('uploadBtn');
-        const uploadForm = document.getElementById('uploadForm');
-        const videoForm = document.getElementById('videoUploadForm');
-        const videoContainer = document.getElementById('videoContainer');
-        const searchInput = document.getElementById('searchInput');
-        const successMessage = document.getElementById('successMessage');
-        const errorMessage = document.getElementById('errorMessage');
-        const videoModal = document.getElementById('videoModal');
-        const modalVideoPlayer = document.getElementById('modalVideoPlayer');
-        const modalVideoTitle = document.getElementById('modalVideoTitle');
-        const modalVideoViews = document.getElementById('modalVideoViews');
-        const modalVideoDate = document.getElementById('modalVideoDate');
-        const modalVideoSize = document.getElementById('modalVideoSize');
-        const modalVideoDesc = document.getElementById('modalVideoDesc');
-        const closeModal = document.getElementById('closeModal');
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        const submitText = document.getElementById('submitText');
-        const submitSpinner = document.getElementById('submitSpinner');
-        const adminPanel = document.getElementById('adminPanel');
-        const adminPanelHeader = document.getElementById('adminPanelHeader');
-        const adminPanelClose = document.getElementById('adminPanelClose');
-        const adminVideoList = document.getElementById('adminVideoList');
-        const logoutAdmin = document.getElementById('logoutAdmin');
-        const passwordModal = document.getElementById('passwordModal');
-        const adminPassword = document.getElementById('adminPassword');
-        const passwordSubmit = document.getElementById('passwordSubmit');
-        const passwordError = document.getElementById('passwordError');
-        const adminBtn = document.getElementById('adminBtn');
+        const uploadBtn = document.getElementById('uploadBtn')
+        const uploadForm = document.getElementById('uploadForm')
+        const videoForm = document.getElementById('videoUploadForm')
+        const videoContainer = document.getElementById('videoContainer')
+        const videoModal = document.getElementById('videoModal')
+        const videoPlayer = document.getElementById('videoPlayer')
+        const modalVideoTitle = document.getElementById('modalVideoTitle')
+        const modalVideoAuthor = document.getElementById('modalVideoAuthor')
+        const modalVideoDate = document.getElementById('modalVideoDate')
+        const modalVideoDesc = document.getElementById('modalVideoDesc')
+        const closeModal = document.getElementById('closeModal')
+        const peerCountElement = document.getElementById('peerCount')
+        const peerCountSpan = peerCountElement.querySelector('span')
         
-        // Загрузка видео из localStorage
-        function loadVideos() {
-            const storedVideos = localStorage.getItem(STORAGE_KEY);
-            videos = storedVideos ? JSON.parse(storedVideos) : [];
-            displayVideos(videos);
+        // Состояние приложения
+        let currentUser = {
+            id: 'user-' + Math.random().toString(36).substr(2, 9),
+            name: 'Анонимный пользователь'
         }
         
-        // Сохранение видео в localStorage
-        function saveVideos() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(videos));
-        }
+        let activeTorrents = {}
+        let peerCount = 0
         
-        // Проверка новых видео каждые 5 секунд
-        function startVideoSync() {
-            setInterval(() => {
-                const storedVideos = localStorage.getItem(STORAGE_KEY);
-                if (storedVideos) {
-                    const parsedVideos = JSON.parse(storedVideos);
-                    if (JSON.stringify(parsedVideos) !== JSON.stringify(videos)) {
-                        videos = parsedVideos;
-                        displayVideos(videos);
-                    }
-                }
-            }, 5000);
-        }
-        
-        // Показать/скрыть форму загрузки
-        uploadBtn.addEventListener('click', () => {
-            uploadForm.classList.toggle('active');
-            if (uploadForm.classList.contains('active')) {
-                document.getElementById('videoTitle').focus();
+        // Обновляем счетчик пиров
+        peersDb.on((data, id) => {
+            if (id !== '_') {
+                const peers = Object.values(data)
+                peerCount = peers.length
+                peerCountSpan.textContent = peerCount
             }
-        });
+        })
         
-        // Загрузка видео
-        videoForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // Регистрируем текущего пользователя
+        peersDb.get(currentUser.id).put({
+            id: currentUser.id,
+            name: currentUser.name,
+            lastSeen: Date.now()
+        })
+        
+        // Загружаем видео из базы
+        videosDb.map().on(async (videoData, id) => {
+            if (!videoData || id === '_') return
             
-            const title = document.getElementById('videoTitle').value.trim();
-            const description = document.getElementById('videoDesc').value.trim();
-            const fileInput = document.getElementById('videoFile');
-            const file = fileInput.files[0];
+            // Проверяем, не добавлено ли видео уже
+            if (document.querySelector(`[data-id="${id}"]`)) return
             
-            // Валидация
-            if (!title || !file) {
-                showError("Пожалуйста, заполните обязательные поля");
-                return;
+            addVideoToUI(videoData, id)
+            
+            // Предварительно подключаемся к торренту
+            if (videoData.magnet) {
+                client.add(videoData.magnet, { announce: videoData.trackers }, (torrent) => {
+                    activeTorrents[id] = torrent
+                })
             }
+        })
+        
+        // Добавление видео в интерфейс
+        function addVideoToUI(videoData, id) {
+            const videoCard = document.createElement('div')
+            videoCard.className = 'video-card'
+            videoCard.dataset.id = id
             
-            if (file.size > 1073741824) { // 1GB
-                showError("Файл слишком большой (максимум 1GB)");
-                return;
-            }
-            
-            // Показываем индикатор загрузки
-            submitText.style.display = 'none';
-            submitSpinner.style.display = 'inline';
-            
-            try {
-                const videoData = {
-                    id: Date.now().toString(),
-                    title: title,
-                    description: description || "Нет описания",
-                    data: await readFileAsDataURL(file),
-                    uploadDate: new Date().toISOString(),
-                    size: formatFileSize(file.size),
-                    duration: await getVideoDuration(file),
-                    views: 0,
-                    isAdminUpload: isAdmin // Добавляем метку, если загружено админом
-                };
-                
-                // Загружаем текущие видео, чтобы не перезаписать чужие
-                const currentVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                currentVideos.unshift(videoData); // Добавляем в начало массива
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(currentVideos));
-                
-                // Обновляем локальное состояние
-                videos = currentVideos;
-                
-                // Очищаем форму
-                videoForm.reset();
-                showSuccess();
-                
-                // Обновляем список видео
-                displayVideos(videos);
-                
-                // Скрываем форму через 2 секунды
-                setTimeout(() => {
-                    uploadForm.classList.remove('active');
-                }, 2000);
-            } catch (error) {
-                console.error("Ошибка загрузки видео:", error);
-                showError("Ошибка при обработке видео");
-            } finally {
-                // Скрываем индикатор загрузки
-                submitText.style.display = 'inline';
-                submitSpinner.style.display = 'none';
-            }
-        });
-        
-        // Чтение файла как DataURL
-        function readFileAsDataURL(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-        
-        // Получение длительности видео
-        function getVideoDuration(file) {
-            return new Promise((resolve) => {
-                const video = document.createElement('video');
-                video.preload = 'metadata';
-                
-                video.onloadedmetadata = function() {
-                    window.URL.revokeObjectURL(video.src);
-                    const duration = video.duration;
-                    resolve(formatDuration(duration));
-                };
-                
-                video.onerror = function() {
-                    resolve("0:00");
-                };
-                
-                video.src = URL.createObjectURL(file);
-            });
-        }
-        
-        // Форматирование длительности
-        function formatDuration(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-        
-        // Форматирование размера файла
-        function formatFileSize(bytes) {
-            if (bytes < 1024) return bytes + ' B';
-            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-            else if (bytes < 1073741824) return (bytes / 1048576).toFixed(1) + ' MB';
-            else return (bytes / 1073741824).toFixed(1) + ' GB';
-        }
-        
-        // Показать сообщение об успехе
-        function showSuccess() {
-            successMessage.style.display = 'block';
-            errorMessage.style.display = 'none';
-            setTimeout(() => {
-                successMessage.style.display = 'none';
-            }, 3000);
-        }
-        
-        // Показать сообщение об ошибке
-        function showError(message) {
-            errorMessage.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-            errorMessage.style.display = 'block';
-            successMessage.style.display = 'none';
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 3000);
-        }
-        
-        // Поиск видео
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
-            filterVideos(searchTerm, activeFilter);
-        });
-        
-        // Фильтрация видео
-        function filterVideos(searchTerm = '', filter = 'all') {
-            let filteredVideos = [...videos];
-            
-            // Применяем текстовый поиск
-            if (searchTerm) {
-                filteredVideos = filteredVideos.filter(video => 
-                    video.title.toLowerCase().includes(searchTerm) || 
-                    video.description.toLowerCase().includes(searchTerm)
-                );
-            }
-            
-            // Применяем временной фильтр
-            const now = new Date();
-            switch(filter) {
-                case 'today':
-                    filteredVideos = filteredVideos.filter(video => {
-                        const uploadDate = new Date(video.uploadDate);
-                        return uploadDate.toDateString() === now.toDateString();
-                    });
-                    break;
-                case 'week':
-                    filteredVideos = filteredVideos.filter(video => {
-                        const uploadDate = new Date(video.uploadDate);
-                        const diffTime = now - uploadDate;
-                        const diffDays = diffTime / (1000 * 60 * 60 * 24);
-                        return diffDays <= 7;
-                    });
-                    break;
-                case 'month':
-                    filteredVideos = filteredVideos.filter(video => {
-                        const uploadDate = new Date(video.uploadDate);
-                        return uploadDate.getMonth() === now.getMonth() && 
-                               uploadDate.getFullYear() === now.getFullYear();
-                    });
-                    break;
-            }
-            
-            displayVideos(filteredVideos);
-        }
-        
-        // Обработчики фильтров
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                filterButtons.forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const searchTerm = searchInput.value.toLowerCase();
-                filterVideos(searchTerm, this.dataset.filter);
-            });
-        });
-        
-        // Отображение видео
-        function displayVideos(videosToDisplay) {
-            videoContainer.innerHTML = '';
-            
-            if (videosToDisplay.length === 0) {
-                videoContainer.innerHTML = `
-                    <div class="no-videos">
-                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                        <h3>Видео не найдены</h3>
-                        <p>Попробуйте изменить параметры поиска или фильтра</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            videosToDisplay.forEach(video => {
-                const videoCard = document.createElement('div');
-                videoCard.className = 'video-card';
-                
-                const uploadDate = new Date(video.uploadDate);
-                const formattedDate = uploadDate.toLocaleDateString('ru-RU', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                });
-                
-                // Добавляем метку админа, если видео загружено админом
-                const adminLabel = video.isAdminUpload 
-                    ? `<span class="admin-badge"><i class="fas fa-check-circle admin-checkmark"></i>Владелец</span>` 
-                    : '';
-                
-                videoCard.innerHTML = `
-                    <div class="video-thumbnail">
-                        <video src="${video.data}" preload="metadata"></video>
-                        <span class="video-duration">${video.duration}</span>
-                        <span class="video-views"><i class="fas fa-eye"></i> ${video.views}</span>
-                    </div>
-                    <div class="video-info">
-                        <div class="video-title" title="${video.title}">${video.title}${adminLabel}</div>
-                        <div class="video-meta">
-                            <span>${formattedDate}</span>
-                            <span>${video.size}</span>
-                        </div>
-                        <div class="video-actions">
-                            <button class="action-btn like-btn" data-id="${video.id}">
-                                <i class="far fa-thumbs-up"></i> Нравится
-                            </button>
-                            <button class="action-btn share-btn" data-id="${video.id}">
-                                <i class="fas fa-share"></i> Поделиться
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                videoCard.addEventListener('click', (e) => {
-                    // Не открываем просмотр, если клик был по кнопке действия
-                    if (e.target.closest('.action-btn')) {
-                        e.stopPropagation();
-                        return;
-                    }
-                    openVideoModal(video);
-                });
-                
-                // Обработчики для кнопок действий
-                const likeBtn = videoCard.querySelector('.like-btn');
-                const shareBtn = videoCard.querySelector('.share-btn');
-                
-                likeBtn.addEventListener('click', () => {
-                    likeBtn.innerHTML = `<i class="fas fa-thumbs-up"></i> Понравилось`;
-                    likeBtn.style.color = 'var(--accent-purple)';
-                });
-                
-                shareBtn.addEventListener('click', () => {
-                    shareVideo(video);
-                });
-                
-                videoContainer.appendChild(videoCard);
-            });
-            
-            // Обновляем список видео в админ панели
-            if (isAdmin) {
-                updateAdminVideoList();
-            }
-        }
-        
-        // Открыть модальное окно с видео
-        function openVideoModal(video) {
-            // Увеличиваем количество просмотров
-            video.views++;
-            saveVideos();
-            
-            const uploadDate = new Date(video.uploadDate);
+            const uploadDate = new Date(videoData.timestamp || Date.now())
             const formattedDate = uploadDate.toLocaleDateString('ru-RU', {
                 day: 'numeric',
                 month: 'long',
                 year: 'numeric'
-            });
+            })
             
-            modalVideoPlayer.src = video.data;
-            modalVideoTitle.innerHTML = video.title + (video.isAdminUpload ? ' <span class="admin-badge"><i class="fas fa-check-circle admin-checkmark"></i>Владелец</span>' : '');
-            modalVideoViews.innerHTML = `<i class="fas fa-eye"></i> ${video.views} просмотров`;
-            modalVideoDate.textContent = formattedDate;
-            modalVideoSize.textContent = video.size;
-            modalVideoDesc.textContent = video.description;
+            videoCard.innerHTML = `
+                <div class="video-thumbnail">
+                    <div class="video-thumbnail-placeholder">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <span class="video-duration">${videoData.duration || '0:00'}</span>
+                    <span class="video-views"><i class="fas fa-eye"></i> ${videoData.views || 0}</span>
+                </div>
+                <div class="video-info">
+                    <div class="video-title" title="${videoData.title}">${videoData.title}</div>
+                    <div class="video-meta">
+                        <span>${videoData.author || currentUser.name}</span>
+                        <span>${formattedDate}</span>
+                    </div>
+                    <div class="video-actions">
+                        <button class="action-btn like-btn">
+                            <i class="far fa-thumbs-up"></i> Нравится
+                        </button>
+                        <button class="action-btn share-btn">
+                            <i class="fas fa-share"></i> Поделиться
+                        </button>
+                    </div>
+                </div>
+            `
             
-            videoModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        // Закрыть модальное окно
-        closeModal.addEventListener('click', () => {
-            modalVideoPlayer.pause();
-            videoModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Закрывать модальное окно при клике вне его
-        videoModal.addEventListener('click', (e) => {
-            if (e.target === videoModal) {
-                closeModal.click();
-            }
-        });
-        
-        // Поделиться видео
-        function shareVideo(video) {
-            if (navigator.share) {
-                navigator.share({
-                    title: video.title,
-                    text: 'Смотрите это видео на ShadowTube PRO',
-                    url: window.location.href + '?video=' + video.id
-                }).catch(err => {
-                    console.error('Ошибка при использовании Web Share API:', err);
-                    fallbackShare(video);
-                });
-            } else {
-                fallbackShare(video);
-            }
-        }
-        
-        // Альтернативный способ поделиться
-        function fallbackShare(video) {
-            const shareUrl = window.location.href + '?video=' + video.id;
-            prompt('Скопируйте ссылку для поделиться:', shareUrl);
-        }
-        
-        // Админ-функционал
-        function updateAdminVideoList() {
-            adminVideoList.innerHTML = '';
-            
-            if (videos.length === 0) {
-                adminVideoList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">Нет видео для управления</p>';
-                return;
-            }
-            
-            videos.forEach(video => {
-                const videoItem = document.createElement('div');
-                videoItem.className = 'admin-video-item';
-                
-                videoItem.innerHTML = `
-                    <div class="admin-video-title" title="${video.title}">${video.title}</div>
-                    <button class="admin-delete-btn" data-id="${video.id}">
-                        <i class="fas fa-trash"></i> Удалить
-                    </button>
-                `;
-                
-                const deleteBtn = videoItem.querySelector('.admin-delete-btn');
-                deleteBtn.addEventListener('click', () => {
-                    if (confirm(`Вы уверены, что хотите удалить видео "${video.title}"?`)) {
-                        deleteVideo(video.id);
-                    }
-                });
-                
-                adminVideoList.appendChild(videoItem);
-            });
-        }
-        
-        function deleteVideo(videoId) {
-            videos = videos.filter(video => video.id !== videoId);
-            saveVideos();
-            displayVideos(videos);
-        }
-        
-        // Перетаскивание админ-панели
-        let isDragging = false;
-        let offsetX, offsetY;
-        
-        adminPanelHeader.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            const rect = adminPanel.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            adminPanel.style.cursor = 'grabbing';
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            
-            adminPanel.style.left = `${e.clientX - offsetX}px`;
-            adminPanel.style.top = `${e.clientY - offsetY}px`;
-            adminPanel.style.right = 'auto';
-        });
-        
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            adminPanel.style.cursor = 'grab';
-        });
-        
-        // Закрытие админ-панели
-        adminPanelClose.addEventListener('click', () => {
-            adminPanel.style.display = 'none';
-        });
-        
-        // Выход из админ-панели
-        logoutAdmin.addEventListener('click', () => {
-            isAdmin = false;
-            localStorage.setItem('shadowTubeAdmin', 'false');
-            adminPanel.style.display = 'none';
-            adminBtn.style.display = 'flex';
-            displayVideos(videos);
-        });
-        
-        // Открытие формы ввода пароля
-        adminBtn.addEventListener('click', () => {
-            if (isAdmin) {
-                adminPanel.style.display = 'block';
-                adminBtn.style.display = 'none';
-            } else {
-                passwordModal.style.display = 'flex';
-                adminPassword.focus();
-            }
-        });
-        
-        // Проверка пароля
-        passwordSubmit.addEventListener('click', () => {
-            if (adminPassword.value === 'АбуБандит') {
-                isAdmin = true;
-                localStorage.setItem('shadowTubeAdmin', 'true');
-                passwordModal.style.display = 'none';
-                adminPanel.style.display = 'block';
-                adminBtn.style.display = 'none';
-                updateAdminVideoList();
-                displayVideos(videos);
-            } else {
-                passwordError.style.display = 'block';
-                adminPassword.classList.add('error');
-                setTimeout(() => {
-                    passwordError.style.display = 'none';
-                    adminPassword.classList.remove('error');
-                }, 3000);
-            }
-        });
-        
-        // Обработка нажатия Enter в поле пароля
-        adminPassword.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                passwordSubmit.click();
-            }
-        });
-        
-        // Инициализация при загрузке страницы
-        window.onload = function() {
-            loadVideos();
-            startVideoSync();
-            
-            // Проверяем URL на наличие параметра video
-            const urlParams = new URLSearchParams(window.location.search);
-            const videoId = urlParams.get('video');
-            
-            if (videoId) {
-                const video = videos.find(v => v.id === videoId);
-                if (video) {
-                    openVideoModal(video);
+            videoCard.addEventListener('click', (e) => {
+                if (e.target.closest('.action-btn')) {
+                    e.stopPropagation()
+                    return
                 }
-            }
+                playVideo(id, videoData)
+            })
             
-            // Показываем кнопку админа, если пользователь не вошел
-            adminBtn.style.display = isAdmin ? 'none' : 'flex';
-            
-            // Если пользователь уже админ, показываем панель
-            if (isAdmin) {
-                adminPanel.style.display = 'block';
-                updateAdminVideoList();
+            // Заменяем или добавляем видео
+            const existingVideo = document.querySelector(`[data-id="${id}"]`)
+            if (existingVideo) {
+                existingVideo.replaceWith(videoCard)
+            } else {
+                videoContainer.querySelector('.no-videos')?.remove()
+                videoContainer.appendChild(videoCard)
             }
-        };
+        }
         
-        // Обработка перетаскивания файлов
-        document.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            if (e.target === document.body) {
-                uploadForm.classList.add('active');
+        // Воспроизведение видео
+        function playVideo(id, videoData) {
+            videoModal.classList.add('active')
+            document.body.style.overflow = 'hidden'
+            
+            modalVideoTitle.textContent = videoData.title
+            modalVideoAuthor.textContent = `Автор: ${videoData.author || 'Неизвестен'}`
+            modalVideoDate.textContent = `Дата: ${new Date(videoData.timestamp).toLocaleDateString()}`
+            modalVideoDesc.textContent = videoData.description || 'Нет описания'
+            
+            videoPlayer.innerHTML = `
+                <div style="color: white; text-align: center; padding: 50px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 3rem;"></i>
+                    <p>Загрузка видео из P2P сети...</p>
+                </div>
+            `
+            
+            // Обновляем количество просмотров
+            videosDb.get(id).put({
+                ...videoData,
+                views: (videoData.views || 0) + 1
+            })
+            
+            // Ищем торрент
+            const torrent = activeTorrents[id] || client.get(videoData.magnet)
+            
+            if (torrent) {
+                torrent.on('ready', () => {
+                    const file = torrent.files.find(f => 
+                        f.name.endsWith('.mp4') || 
+                        f.name.endsWith('.webm') || 
+                        f.name.endsWith('.mov')
+                    )
+                    
+                    if (file) {
+                        videoPlayer.innerHTML = ''
+                        file.renderTo(videoPlayer, {
+                            controls: true,
+                            autoplay: true
+                        })
+                    } else {
+                        videoPlayer.innerHTML = `
+                            <div style="color: white; text-align: center; padding: 50px;">
+                                <i class="fas fa-exclamation-triangle" style="font-size: 3rem;"></i>
+                                <p>Не удалось найти видеофайл в торренте</p>
+                            </div>
+                        `
+                    }
+                })
             }
-        });
+        }
+        
+        // Закрытие модального окна
+        closeModal.addEventListener('click', () => {
+            videoModal.classList.remove('active')
+            document.body.style.overflow = 'auto'
+            
+            // Останавливаем воспроизведение
+            const videoElement = videoPlayer.querySelector('video')
+            if (videoElement) {
+                videoElement.pause()
+                videoElement.src = ''
+            }
+        })
+        
+        // Обработка формы загрузки
+        videoForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const title = document.getElementById('videoTitle').value.trim()
+            const description = document.getElementById('videoDesc').value.trim()
+            const fileInput = document.getElementById('videoFile')
+            const file = fileInput.files[0]
+            
+            if (!title || !file) {
+                showError("Пожалуйста, заполните обязательные поля")
+                return
+            }
+            
+            if (file.size > 100 * 1024 * 1024) {
+                showError("Файл слишком большой (максимум 100MB)")
+                return
+            }
+            
+            // Показываем индикатор загрузки
+            document.getElementById('submitText').style.display = 'none'
+            document.getElementById('submitSpinner').style.display = 'inline'
+            
+            try {
+                // Создаем торрент
+                client.seed(file, { name: file.name }, (torrent) => {
+                    const videoData = {
+                        id: 'video-' + Date.now(),
+                        title: title,
+                        description: description,
+                        author: currentUser.name,
+                        timestamp: Date.now(),
+                        views: 0,
+                        duration: '0:00', // Можно добавить определение длительности
+                        magnet: torrent.magnetURI,
+                        trackers: [
+                            'wss://tracker.openwebtorrent.com',
+                            'wss://tracker.btorrent.xyz'
+                        ]
+                    }
+                    
+                    // Сохраняем в базу
+                    videosDb.get(videoData.id).put(videoData)
+                    
+                    // Очищаем форму
+                    videoForm.reset()
+                    showSuccess("Видео успешно загружено!")
+                    
+                    // Скрываем форму через 2 секунды
+                    setTimeout(() => {
+                        uploadForm.classList.remove('active')
+                    }, 2000)
+                })
+            } catch (error) {
+                console.error("Ошибка загрузки:", error)
+                showError("Ошибка при загрузке видео")
+            } finally {
+                document.getElementById('submitText').style.display = 'inline'
+                document.getElementById('submitSpinner').style.display = 'none'
+            }
+        })
+        
+        // Вспомогательные функции
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage')
+            errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`
+            errorElement.style.display = 'block'
+            document.getElementById('successMessage').style.display = 'none'
+            
+            setTimeout(() => {
+                errorElement.style.display = 'none'
+            }, 3000)
+        }
+        
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage')
+            successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`
+            successElement.style.display = 'block'
+            document.getElementById('errorMessage').style.display = 'none'
+            
+            setTimeout(() => {
+                successElement.style.display = 'none'
+            }, 3000)
+        }
+        
+        // Инициализация интерфейса
+        uploadBtn.addEventListener('click', () => {
+            uploadForm.classList.toggle('active')
+        })
+        
+        // Периодически обновляем статус подключения
+        setInterval(() => {
+            peersDb.get(currentUser.id).put({
+                lastSeen: Date.now()
+            })
+        }, 30000)
     </script>
 </body>
-                    </html>
+        </html>
