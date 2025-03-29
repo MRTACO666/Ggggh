@@ -258,6 +258,16 @@
             align-items: center;
             justify-content: center;
             background: linear-gradient(45deg, #1a1a1a, #2a0a4a);
+            cursor: pointer;
+            overflow: hidden;
+        }
+        
+        .file-thumbnail img,
+        .file-thumbnail video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
         }
         
         .file-icon {
@@ -405,6 +415,82 @@
             margin-top: 20px;
         }
         
+        /* Медиаплеер */
+        .media-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .media-viewer.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .media-container {
+            position: relative;
+            max-width: 90%;
+            max-height: 90vh;
+        }
+        
+        .media-container img,
+        .media-container video {
+            max-width: 100%;
+            max-height: 90vh;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .close-media {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--accent-red);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .media-controls {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .media-controls button {
+            background: var(--accent-purple);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
         /* Адаптивность */
         @media (max-width: 768px) {
             .file-grid, .shared-files-grid {
@@ -500,6 +586,19 @@
         </div>
     </div>
 
+    <!-- Медиаплеер для просмотра фото/видео -->
+    <div id="mediaViewer" class="media-viewer">
+        <div class="media-container">
+            <button class="close-media" id="closeMedia">&times;</button>
+            <div id="mediaContent"></div>
+            <div class="media-controls" id="mediaControls">
+                <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+                <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
+                <button id="fullscreenBtn"><i class="fas fa-expand"></i></button>
+            </div>
+        </div>
+    </div>
+
     <!-- Уведомления -->
     <div id="toast" class="toast">
         <i class="fas fa-check-circle"></i>
@@ -530,6 +629,13 @@
         const sharedFilesModal = document.getElementById('sharedFilesModal');
         const sharedFilesGrid = document.getElementById('sharedFilesGrid');
         const closeSharedModal = document.getElementById('closeSharedModal');
+        const mediaViewer = document.getElementById('mediaViewer');
+        const mediaContent = document.getElementById('mediaContent');
+        const closeMedia = document.getElementById('closeMedia');
+        const mediaControls = document.getElementById('mediaControls');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
         
         // Показать уведомление
         function showToast(message, isSuccess = true) {
@@ -659,6 +765,24 @@
             });
         }
         
+        // Получение файла по ID
+        async function getFileById(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(STORE_NAME, 'readonly');
+                const store = transaction.objectStore(STORE_NAME);
+                
+                const request = store.get(id);
+                
+                request.onerror = (event) => {
+                    reject(event.target.error);
+                };
+                
+                request.onsuccess = (event) => {
+                    resolve(event.target.result);
+                };
+            });
+        }
+        
         // Чтение файла с прогрессом
         function readFileWithProgress(file) {
             return new Promise((resolve, reject) => {
@@ -722,6 +846,92 @@
             });
         }
         
+        // Показать медиа (фото/видео)
+        async function showMedia(id) {
+            try {
+                const file = await getFileById(id);
+                if (!file) {
+                    showToast('Файл не найден', false);
+                    return;
+                }
+                
+                mediaContent.innerHTML = '';
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = file.data;
+                    img.alt = file.title;
+                    mediaContent.appendChild(img);
+                    
+                    // Скрываем элементы управления для изображений
+                    mediaControls.style.display = 'none';
+                } else if (file.type.startsWith('video/')) {
+                    const video = document.createElement('video');
+                    video.src = file.data;
+                    video.controls = true;
+                    video.style.width = '100%';
+                    mediaContent.appendChild(video);
+                    
+                    // Показываем элементы управления для видео
+                    mediaControls.style.display = 'flex';
+                    
+                    // Обработчики для кнопок управления видео
+                    let isPlaying = false;
+                    let isMuted = false;
+                    
+                    playPauseBtn.addEventListener('click', () => {
+                        if (isPlaying) {
+                            video.pause();
+                            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        } else {
+                            video.play();
+                            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        }
+                        isPlaying = !isPlaying;
+                    });
+                    
+                    muteBtn.addEventListener('click', () => {
+                        if (isMuted) {
+                            video.muted = false;
+                            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                        } else {
+                            video.muted = true;
+                            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                        }
+                        isMuted = !isMuted;
+                    });
+                    
+                    fullscreenBtn.addEventListener('click', () => {
+                        if (video.requestFullscreen) {
+                            video.requestFullscreen();
+                        } else if (video.webkitRequestFullscreen) {
+                            video.webkitRequestFullscreen();
+                        } else if (video.msRequestFullscreen) {
+                            video.msRequestFullscreen();
+                        }
+                    });
+                    
+                    video.addEventListener('play', () => {
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    });
+                    
+                    video.addEventListener('pause', () => {
+                        isPlaying = false;
+                        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    });
+                } else {
+                    showToast('Этот тип файла нельзя просмотреть', false);
+                    return;
+                }
+                
+                mediaViewer.classList.add('show');
+            } catch (error) {
+                console.error('Ошибка открытия файла:', error);
+                showToast('Ошибка открытия файла', false);
+            }
+        }
+        
         // Отображение файлов
         async function displayFiles() {
             try {
@@ -757,9 +967,23 @@
                     else if (file.type.includes('pdf')) fileIcon = 'fa-file-pdf';
                     else if (file.type.includes('zip')) fileIcon = 'fa-file-archive';
                     
+                    // Для изображений и видео показываем превью
+                    let thumbnailContent = `<i class="fas ${fileIcon} file-icon"></i>`;
+                    
+                    if (file.type.startsWith('image/')) {
+                        thumbnailContent = `<img src="${file.data}" alt="${file.title}" style="max-height: 100%; max-width: 100%; object-fit: contain;">`;
+                    } else if (file.type.startsWith('video/')) {
+                        thumbnailContent = `
+                            <video style="max-height: 100%; max-width: 100%; object-fit: contain;" muted loop>
+                                <source src="${file.data}" type="${file.type}">
+                            </video>
+                            <i class="fas fa-play" style="position: absolute; color: white; font-size: 2rem;"></i>
+                        `;
+                    }
+                    
                     fileCard.innerHTML = `
-                        <div class="file-thumbnail">
-                            <i class="fas ${fileIcon} file-icon"></i>
+                        <div class="file-thumbnail" data-id="${file.id}">
+                            ${thumbnailContent}
                         </div>
                         <div class="file-info">
                             <h3 class="file-title" title="${file.title}">${file.title}</h3>
@@ -776,16 +1000,22 @@
                     `;
                     
                     fileGrid.appendChild(fileCard);
+                    
+                    // Добавляем обработчик клика на превью
+                    const thumbnail = fileCard.querySelector('.file-thumbnail');
+                    thumbnail.addEventListener('click', () => showMedia(file.id));
                 });
                 
                 // Обработчики удаления
                 document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', async function() {
+                    btn.addEventListener('click', async function(e) {
+                        e.stopPropagation(); // Предотвращаем всплытие события
                         if (confirm('Удалить этот файл?')) {
                             try {
                                 await deleteFile(this.getAttribute('data-id'));
                                 showToast('Файл удален');
                                 await displayFiles();
+                                await updateShareLink();
                                 await checkStorageQuota();
                             } catch (error) {
                                 console.error('Ошибка удаления:', error);
@@ -847,9 +1077,12 @@
                 else if (file.type.includes('pdf')) fileIcon = 'fa-file-pdf';
                 else if (file.type.includes('zip')) fileIcon = 'fa-file-archive';
                 
+                // Для изображений и видео показываем превью
+                let thumbnailContent = `<i class="fas ${fileIcon} file-icon"></i>`;
+                
                 fileCard.innerHTML = `
-                    <div class="file-thumbnail">
-                        <i class="fas ${fileIcon} file-icon"></i>
+                    <div class="file-thumbnail" data-id="${file.id}">
+                        ${thumbnailContent}
                     </div>
                     <div class="file-info">
                         <h3 class="file-title" title="${file.title}">${file.title}</h3>
@@ -862,6 +1095,10 @@
                 `;
                 
                 sharedFilesGrid.appendChild(fileCard);
+                
+                // Добавляем обработчик клика на превью
+                const thumbnail = fileCard.querySelector('.file-thumbnail');
+                thumbnail.addEventListener('click', () => showMedia(file.id));
             });
             
             sharedFilesModal.classList.add('show');
@@ -958,6 +1195,16 @@
                     sharedFilesModal.classList.remove('show');
                 });
                 
+                // Закрытие медиаплеера
+                closeMedia.addEventListener('click', () => {
+                    mediaViewer.classList.remove('show');
+                    // Останавливаем видео при закрытии
+                    const video = mediaContent.querySelector('video');
+                    if (video) {
+                        video.pause();
+                    }
+                });
+                
                 // Проверка URL при загрузке
                 const urlParams = new URLSearchParams(window.location.search);
                 const sharedParam = urlParams.get('shared');
@@ -990,4 +1237,4 @@
     <!-- Библиотека для сжатия данных -->
     <script src="https://cdn.jsdelivr.net/npm/lz-string@1.4.4/libs/lz-string.min.js"></script>
 </body>
-</html>
+    </html>
