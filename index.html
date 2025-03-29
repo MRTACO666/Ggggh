@@ -904,11 +904,42 @@
         const GITHUB_USER = 'MRTACO666';
         const REPO_NAME = 'shadowtube-data';
         const DATA_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO_NAME}/main/videos.json`;
-        let githubToken = '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'; // Нужно будет вставить после создания репозитория
+        let githubToken = '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';
         
         // Хранилище для видео
         let videos = JSON.parse(localStorage.getItem('shadowTubeVideos')) || [];
         let isAdmin = localStorage.getItem('shadowTubeAdmin') === 'true';
+
+        // DOM элементы
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadForm = document.getElementById('uploadForm');
+        const videoForm = document.getElementById('videoUploadForm');
+        const videoContainer = document.getElementById('videoContainer');
+        const submitText = document.getElementById('submitText');
+        const submitSpinner = document.getElementById('submitSpinner');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const videoModal = document.getElementById('videoModal');
+        const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+        const modalVideoTitle = document.getElementById('modalVideoTitle');
+        const modalVideoViews = document.getElementById('modalVideoViews');
+        const modalVideoDate = document.getElementById('modalVideoDate');
+        const modalVideoSize = document.getElementById('modalVideoSize');
+        const modalVideoDesc = document.getElementById('modalVideoDesc');
+        const closeModal = document.getElementById('closeModal');
+        const adminPanel = document.getElementById('adminPanel');
+        const adminBtn = document.getElementById('adminBtn');
+        const adminPanelClose = document.getElementById('adminPanelClose');
+        const adminVideoList = document.getElementById('adminVideoList');
+        const logoutAdmin = document.getElementById('logoutAdmin');
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordSubmit = document.getElementById('passwordSubmit');
+        const adminPassword = document.getElementById('adminPassword');
+        const passwordError = document.getElementById('passwordError');
+        const adminPanelHeader = document.getElementById('adminPanelHeader');
+
+        // Пароль админа (в реальном приложении это должно быть на сервере)
+        const ADMIN_PASSWORD = "АбамаНегр";
 
         // Загрузка видео из GitHub
         async function loadVideos() {
@@ -950,7 +981,7 @@
                     },
                     body: JSON.stringify({
                         message: 'Обновление видео',
-                        content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+                        content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))),
                         sha: sha
                     })
                 });
@@ -965,7 +996,170 @@
             }
         }
 
-        // Модифицированная функция загрузки видео
+        // Функция для отображения видео
+        function displayVideos(videosToDisplay) {
+            if (videosToDisplay.length === 0) {
+                videoContainer.innerHTML = `
+                    <div class="no-videos">
+                        <i class="fas fa-video-slash" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>Пока нет видео</h3>
+                        <p>Будьте первым, кто загрузит видео!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            videoContainer.innerHTML = videosToDisplay.map(video => `
+                <div class="video-card" data-id="${video.id}">
+                    <div class="video-thumbnail" onclick="openVideoModal('${video.id}')">
+                        <video src="${video.data}" poster=""></video>
+                        <div class="video-duration">${video.duration}</div>
+                        <div class="video-views">
+                            <i class="fas fa-eye"></i>
+                            <span>${video.views}</span>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <div class="video-meta">
+                            <span>${formatDate(video.uploadDate)}</span>
+                            <span>${video.size}</span>
+                        </div>
+                        ${video.isAdminUpload ? '<span class="admin-badge"><i class="fas fa-check-circle admin-checkmark"></i>Admin</span>' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Функция для открытия модального окна с видео
+        function openVideoModal(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+
+            // Увеличиваем счетчик просмотров
+            video.views = (video.views || 0) + 1;
+            localStorage.setItem('shadowTubeVideos', JSON.stringify(videos));
+            saveToGitHub(videos);
+
+            modalVideoPlayer.src = video.data;
+            modalVideoTitle.textContent = video.title;
+            modalVideoViews.textContent = `${video.views} просмотров`;
+            modalVideoDate.textContent = formatDate(video.uploadDate);
+            modalVideoSize.textContent = video.size;
+            modalVideoDesc.textContent = video.description || "Нет описания";
+            
+            videoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Форматирование даты
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Обработчики для админ-панели
+        adminBtn.addEventListener('click', () => {
+            if (isAdmin) {
+                adminPanel.style.display = 'block';
+                updateAdminVideoList();
+            } else {
+                passwordModal.style.display = 'flex';
+            }
+        });
+
+        adminPanelClose.addEventListener('click', () => {
+            adminPanel.style.display = 'none';
+        });
+
+        passwordSubmit.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (adminPassword.value === ADMIN_PASSWORD) {
+                isAdmin = true;
+                localStorage.setItem('shadowTubeAdmin', 'true');
+                passwordModal.style.display = 'none';
+                adminPanel.style.display = 'block';
+                adminBtn.style.display = 'none';
+                updateAdminVideoList();
+            } else {
+                passwordError.style.display = 'block';
+            }
+        });
+
+        logoutAdmin.addEventListener('click', () => {
+            isAdmin = false;
+            localStorage.removeItem('shadowTubeAdmin');
+            adminPanel.style.display = 'none';
+            adminBtn.style.display = 'flex';
+        });
+
+        // Функция для обновления списка видео в админ-панели
+        function updateAdminVideoList() {
+            adminVideoList.innerHTML = '';
+            videos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'admin-video-item';
+                videoItem.innerHTML = `
+                    <div class="admin-video-title">${video.title}</div>
+                    <button class="admin-delete-btn" data-id="${video.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                adminVideoList.appendChild(videoItem);
+            });
+
+            // Добавляем обработчики для кнопок удаления
+            document.querySelectorAll('.admin-delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    deleteVideo(id);
+                });
+            });
+        }
+
+        // Функция удаления видео
+        function deleteVideo(id) {
+            if (confirm('Вы уверены, что хотите удалить это видео?')) {
+                videos = videos.filter(video => video.id !== id);
+                localStorage.setItem('shadowTubeVideos', JSON.stringify(videos));
+                saveToGitHub(videos);
+                displayVideos(videos);
+                updateAdminVideoList();
+            }
+        }
+
+        // Делаем админ-панель перетаскиваемой
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        adminPanelHeader.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            offsetX = e.clientX - adminPanel.getBoundingClientRect().left;
+            offsetY = e.clientY - adminPanel.getBoundingClientRect().top;
+            adminPanel.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            adminPanel.style.left = `${e.clientX - offsetX}px`;
+            adminPanel.style.top = `${e.clientY - offsetY}px`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            adminPanel.style.cursor = 'grab';
+        });
+
+        // Обработчики для формы загрузки видео
+        uploadBtn.addEventListener('click', () => {
+            uploadForm.classList.toggle('active');
+        });
+
         videoForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -1017,7 +1211,7 @@
             }
         });
 
-        // Остальные функции остаются без изменений
+        // Вспомогательные функции
         function readFileAsDataURL(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1071,9 +1265,13 @@
                 errorMessage.style.display = 'none';
             }, 3000);
         }
-        
-        // Остальной код (фильтрация, отображение видео и т.д.) остается без изменений
-        // ... (вставьте сюда остальные функции из вашего кода) ...
+
+        // Обработчики для модального окна видео
+        closeModal.addEventListener('click', () => {
+            videoModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            modalVideoPlayer.pause();
+        });
 
         // Инициализация при загрузке страницы
         window.onload = function() {
@@ -1094,6 +1292,9 @@
                 updateAdminVideoList();
             }
         };
+
+        // Делаем функцию доступной глобально для вызова из HTML
+        window.openVideoModal = openVideoModal;
     </script>
 </body>
-    </html>
+                        </html>
