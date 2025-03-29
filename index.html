@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShadowTube P2P</title>
+    <title>ShadowTube</title>
     <style>
         :root {
             --bg-dark: #0a0a0a;
@@ -13,8 +13,6 @@
             --purple-light: #c77dff;
             --text-light: #f8f9fa;
             --text-gray: #adb5bd;
-            --red-alert: #ff4444;
-            --green-ok: #44ff44;
         }
         
         * {
@@ -127,7 +125,7 @@
         .video-thumbnail-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            padding-top: 56.25%;
             background-color: rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
@@ -234,6 +232,12 @@
         .video-date {
             font-size: 0.8rem;
             color: var(--text-gray);
+        }
+        
+        .video-author {
+            font-size: 0.75rem;
+            color: var(--purple-light);
+            margin-top: 0.5rem;
         }
         
         .upload-btn {
@@ -488,14 +492,7 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-        
         .loading {
-            animation: pulse 1.5s infinite ease-in-out;
             text-align: center;
             padding: 2rem;
             color: var(--text-gray);
@@ -508,188 +505,21 @@
             font-size: 0.9rem;
         }
         
-        .connection-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-darker);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            transition: opacity 0.5s ease;
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
         }
         
-        .connection-logo {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 2rem;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        .connection-title {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--purple-light);
-            text-align: center;
-        }
-        
-        .connection-status {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: var(--text-gray);
-            text-align: center;
-            max-width: 80%;
-        }
-        
-        .progress-container-connection {
-            width: 80%;
-            max-width: 400px;
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-        
-        .progress-bar-connection {
-            height: 100%;
-            background: linear-gradient(to right, var(--purple-primary), var(--purple-secondary));
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        .connection-details {
-            font-size: 0.9rem;
-            color: var(--text-gray);
-            text-align: center;
-            margin-top: 1rem;
-        }
-        
-        .hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .storage-info {
-            position: fixed;
-            bottom: 150px;
-            right: 30px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .storage-used {
-            color: var(--purple-light);
-        }
-        
-        .file-size {
-            margin-top: 5px;
-            font-size: 0.8rem;
-            color: var(--text-gray);
-        }
-        
-        .peer-status {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            background: rgba(0,0,0,0.7);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .peer-count {
-            color: var(--purple-light);
-            font-weight: bold;
-        }
-        
-        .connection-status-indicator {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        
-        .status-connected {
-            background-color: var(--green-ok);
-            box-shadow: 0 0 10px var(--green-ok);
-        }
-        
-        .status-connecting {
-            background-color: orange;
-            box-shadow: 0 0 10px orange;
-            animation: pulse 1.5s infinite;
-        }
-        
-        .status-disconnected {
-            background-color: var(--red-alert);
-            box-shadow: 0 0 10px var(--red-alert);
-        }
-        
-        .warning-banner {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 165, 0, 0.9);
-            color: #000;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 5000;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-        
-        .warning-banner.hidden {
-            display: none;
-        }
-        
-        .warning-icon {
-            margin-right: 10px;
-            font-size: 1.5em;
-        }
-        
-        .retry-btn {
-            margin-left: 15px;
-            padding: 5px 10px;
-            background: #fff;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
+        .loading-text {
+            animation: pulse 1.5s infinite ease-in-out;
         }
     </style>
 </head>
 <body>
-    <div class="connection-modal" id="connection-modal">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjN2EyY2JmIiBkPSJNMjU2IDMyYzEyMy41IDAgMjI0IDEwMC41IDIyNCAyMjRTMzc5LjUgNDgwIDI1NiA0ODBTMzIgMzc5LjUgMzIgMjU2IDEzMi41IDMyIDI1NiAzMnpNMTI4IDI1NmMwIDcwLjcgNTcuMyAxMjggMTI4IDEyOHMxMjgtNTcuMyAxMjgtMTI4LTU3LjMtMTI4LTEyOC0xMjgtMTI4IDU3LjMtMTI4IDEyOHptOTYgMGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMiAxNC4zLTMyIDMyLTMyIDMyIDE0LjMgMzIgMzJ6Ii8+PHBhdGggZmlsbD0iI2Y4ZjlmYSIgZD0iTTI1NiAxMjhjLTcwLjcgMC0xMjggNTcuMy0xMjggMTI4czU3LjMgMTI4IDEyOCAxMjggMTI4LTU3LjMgMTI4LTEyOC01Ny4zLTEyOC0xMjgtMTI4em0wIDE2MGMtMTcuNyAwLTMyLTE4LjMtMzItMzJzMTQuMy0zMiAzMi0zMiAzMiAxOC4zIDMyIDMyLTE0LjMgMzItMzIgMzJ6Ii8+PC9zdmc+" alt="ShadowTube Logo" class="connection-logo">
-        <h2 class="connection-title">Подключение к ShadowTube</h2>
-        <p class="connection-status" id="connection-status">Устанавливаем соединение...</p>
-        <div class="progress-container-connection">
-            <div class="progress-bar-connection" id="progress-bar-connection"></div>
-        </div>
-        <p class="connection-details" id="connection-details">Инициализация P2P сети...</p>
-    </div>
-    
-    <div class="warning-banner hidden" id="warning-banner">
-        <span class="warning-icon">⚠️</span>
-        <span id="warning-text"></span>
-        <button class="retry-btn" id="retry-btn">Повторить</button>
-    </div>
-    
     <header>
         <div class="logo">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjN2EyY2JmIiBkPSJNMjU2IDMyYzEyMy41IDAgMjI0IDEwMC41IDIyNCAyMjRTMzc5LjUgNDgwIDI1NiA0ODBTMzIgMzc5LjUgMzIgMjU2IDEzMi41IDMyIDI1NiAzMnpNMTI4IDI1NmMwIDcwLjcgNTcuMyAxMjggMTI4IDEyOHMxMjgtNTcuMyAxMjgtMTI4LTU3LjMtMTI4LTEyOC0xMjgtMTI4IDU3LjMtMTI4IDEyOHptOTYgMGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMiAxNC4zLTMyIDMyLTMyIDMyIDE0LjMgMzIgMzJ6Ii8+PHBhdGggZmlsbD0iI2Y4ZjlmYSIgZD0iTTI1NiAxMjhjLTcwLjcgMC0xMjggNTcuMy0xMjggMTI4czU3LjMgMTI4IDEyOCAxMjggMTI4LTU3LjMgMTI4LTEyOC01Ny4zLTEyOC0xMjgtMTI4em0wIDE2MGMtMTcuNyAwLTMyLTE4LjMtMzItMzJzMTQuMy0zMiAzMi0zMiAzMiAxOC4zIDMyIDMyLTE0LjMgMzItMzIgMzJ6Ii8+PC9zdmc+" alt="ShadowTube Logo" class="mushroom-logo">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjN2EyY2JmIiBkPSJNMjU2IDMyYzEyMy41IDAgMjI0IDEwMC41IDIyNCAyMjRTMzc5LjUgNDgwIDI1NiA0ODBTMzIgMzc5LjUgMzIgMjU2IDEzMi41IDMyIDI1NiAzMnpNMTI4IDI1NmMwIDcwLjcgNTcuMyAxMjggMTI4IDEyOHMxMjgtNTcuMyAxMjgtMTI4LTU3LjMtMTI4LTEyOC0xMjgtMTI4IDU3LjMtMTI4IDEyOHptOTYgMGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMiAxNC4zLTMyIDMyLTMyIDMyIDE0LjMgMzIgMzJ6Ii8+PHBhdGggZmlsbD0iI2Y4ZjlmYSIgZD0iTTI1NiAxMjhjLTcwLjcgMC0xMjggNTcuMy0xMjggMTI4czU3LjMgMTI4IDEyOCAxMjggMTI4LTU3LjMgMTI4LTEyOC01Ny4zLTEyOC0xMjgtMTI4em0wIDE2MGMtMTcuNyAwLTMyLTE0LjMtMzItMzJzMTQuMy0zMiAzMi0zMiAzMiAxNC4zIDMyIDMyLTE0LjMgMzItMzIgMzJ6Ii8+PC9zdmc+" alt="ShadowTube Logo" class="mushroom-logo">
             <h1>ShadowTube</h1>
         </div>
     </header>
@@ -699,7 +529,9 @@
     </div>
     
     <div class="video-grid" id="video-grid">
-        <!-- Видео будут добавляться здесь динамически -->
+        <div class="loading">
+            <div class="loading-text">Загрузка видео...</div>
+        </div>
     </div>
     
     <button class="upload-btn" id="upload-btn">+</button>
@@ -746,615 +578,122 @@
             </div>
         </div>
     </div>
-    
-    <div class="storage-info" id="storage-info">
-        Использовано: <span class="storage-used" id="storage-used">0 MB</span>
-        <div class="file-size" id="file-size"></div>
-    </div>
-    
-    <div class="peer-status" id="peer-status">
-        <span class="connection-status-indicator status-disconnected" id="connection-indicator"></span>
-        Подключено: <span class="peer-count" id="peer-count">0</span> пользователей
-    </div>
 
     <script>
-        // ================== КОНФИГУРАЦИЯ ==================
-        const CONFIG = {
-            // Резервные signaling-серверы
-            SIGNALING_SERVERS: [
-                'wss://signaling1.free-socket.org',
-                'wss://signaling2.free-socket.org',
-                'wss://signaling3.free-socket.org',
-                'wss://free-p2p-signaling.herokuapp.com'
-            ],
-            
-            // Исправленные STUN/TURN серверы (без параметров в URL)
-            ICE_SERVERS: [
-                { urls: "stun:stun.l.google.com:19302" },
-                { urls: "stun:global.stun.twilio.com:3478" },
-                { 
-                    urls: "turn:turn.bistri.com:80",
-                    credential: "homeo",
-                    username: "homeo"
-                },
-                {
-                    urls: "turn:turn.anyfirewall.com:443",
-                    credential: "webrtc",
-                    username: "webrtc"
-                },
-                // Дополнительные резервные серверы
-                { urls: "stun:stun1.l.google.com:19302" },
-                { urls: "stun:stun2.l.google.com:19302" },
-                { urls: "stun:stun.voipbuster.com:3478" }
-            ],
-            
-            // Таймауты
-            CONNECTION_TIMEOUT: 10000, // 10 секунд
-            RECONNECT_DELAY: 3000,     // 3 секунды
-            MAX_RETRIES: 5             // Максимальное количество попыток
-        };
-
-        // Константы
-        const STORAGE_KEY = 'shadowtube_videos';
-        const DB_NAME = 'ShadowTubeDB';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'videos';
-        const PEER_CHANNEL = 'shadowtube-channel';
-        const DEMO_VIDEOS = [
-            {
-                id: 'demo1',
-                title: "Добро пожаловать в ShadowTube",
-                description: "Это демонстрационное видео. Загрузите свое!",
-                views: 0,
-                likes: 0,
-                date: new Date().toISOString(),
-                thumbnail: "https://i.imgur.com/5q6ZfLJ.jpg",
-                fileName: "welcome.mp4",
-                fileType: "video/mp4",
-                fileSize: 1024,
-                liked: false,
-                isDemo: true
-            },
-            {
-                id: 'demo2',
-                title: "Как загружать видео",
-                description: "Нажмите на кнопку + в правом нижнем углу",
-                views: 0,
-                likes: 0,
-                date: new Date().toISOString(),
-                thumbnail: "https://i.imgur.com/JzVS7Uj.jpg",
-                fileName: "tutorial.mp4",
-                fileType: "video/mp4",
-                fileSize: 2048,
-                liked: false,
-                isDemo: true
-            }
-        ];
+        // Конфигурация GitHub (ЗАМЕНИТЕ ТОКЕН НА СВОЙ)
+        const GITHUB_USER = 'MRTACO666';
+        const REPO_NAME = 'shadowtube-data';
+        const DATA_FILE = 'videos.json';
+        const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${DATA_FILE}`;
+        const RAW_DATA_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO_NAME}/main/${DATA_FILE}`;
+        const GITHUB_TOKEN = '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';
         
-        // Глобальные переменные
-        let db;
-        let peerConnection;
-        let peerId = Math.random().toString(36).substring(2, 15);
-        let connectedPeers = 0;
-        let currentVideo = null;
-        let p2pManager;
-        
-        // Элементы интерфейса
-        const connectionModal = document.getElementById('connection-modal');
-        const connectionStatus = document.getElementById('connection-status');
-        const connectionDetails = document.getElementById('connection-details');
-        const progressBarConnection = document.getElementById('progress-bar-connection');
-        const connectionIndicator = document.getElementById('connection-indicator');
-        const videoGrid = document.getElementById('video-grid');
-        const searchInput = document.getElementById('search-input');
+        // DOM элементы
         const uploadBtn = document.getElementById('upload-btn');
         const uploadModal = document.getElementById('upload-modal');
         const closeBtn = document.getElementById('close-btn');
         const videoUploadForm = document.getElementById('video-upload-form');
-        const videoTitleInput = document.getElementById('video-title');
-        const videoDescriptionInput = document.getElementById('video-description');
-        const videoFileInput = document.getElementById('video-file');
+        const videoGrid = document.getElementById('video-grid');
+        const searchInput = document.getElementById('search-input');
         const fileLabel = document.getElementById('file-label');
-        const uploadStatus = document.getElementById('upload-status');
+        const videoFileInput = document.getElementById('video-file');
         const videoPlayerModal = document.getElementById('video-player-modal');
         const videoPlayer = document.getElementById('video-player');
         const playerCloseBtn = document.getElementById('player-close-btn');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
-
-        // ================== P2P МЕНЕДЖЕР ==================
-        class P2PManager {
-            constructor() {
-                this.peerId = Math.random().toString(36).substring(2, 15);
-                this.retryCount = 0;
-                this.currentServerIndex = 0;
-                this.connectionState = 'disconnected';
-                this.dataChannel = null;
-                this.peerConnection = null;
-                this.ws = null;
-            }
-            
-            async connect() {
-                try {
-                    this.updateConnectionState('connecting');
-                    
-                    // 1. Подключаемся к signaling-серверу
-                    this.ws = await this.connectToSignalingServer();
-                    
-                    // 2. Инициализируем WebRTC соединение
-                    await this.initWebRTC();
-                    
-                    // 3. Регистрируемся на сервере
-                    this.registerOnServer();
-                    
-                    this.updateConnectionState('connected');
-                    return true;
-                } catch (error) {
-                    console.error('P2P connection failed:', error);
-                    this.updateConnectionState('error', error.message);
-                    return false;
-                }
-            }
-            
-            async connectToSignalingServer() {
-                while (this.currentServerIndex < CONFIG.SIGNALING_SERVERS.length) {
-                    const url = CONFIG.SIGNALING_SERVERS[this.currentServerIndex];
-                    try {
-                        const ws = new WebSocket(url);
-                        
-                        // Ожидаем открытия соединения с таймаутом
-                        await new Promise((resolve, reject) => {
-                            const timer = setTimeout(() => {
-                                reject(new Error(`Timeout connecting to ${url}`));
-                            }, CONFIG.CONNECTION_TIMEOUT);
-                            
-                            ws.onopen = () => {
-                                clearTimeout(timer);
-                                resolve();
-                            };
-                            
-                            ws.onerror = (error) => {
-                                clearTimeout(timer);
-                                reject(error);
-                            };
-                        });
-                        
-                        console.log(`Connected to signaling server: ${url}`);
-                        return ws;
-                    } catch (error) {
-                        console.log(`Failed to connect to ${url}:`, error.message);
-                        this.currentServerIndex++;
-                        if (this.currentServerIndex >= CONFIG.SIGNALING_SERVERS.length) {
-                            throw new Error('All signaling servers unavailable');
-                        }
+        const uploadStatus = document.getElementById('upload-status');
+        
+        // Текущее воспроизводимое видео
+        let currentVideo = null;
+        let currentUser = 'user_' + Math.random().toString(36).substr(2, 8);
+        
+        // Инициализация хранилища
+        async function initializeStorage() {
+            try {
+                const response = await fetch(RAW_DATA_URL + '?t=' + Date.now());
+                if (!response.ok) throw new Error('Файл не найден');
+                return await response.json();
+            } catch (error) {
+                console.log('Инициализация нового хранилища...');
+                const initialVideos = [
+                    {
+                        id: Date.now().toString(),
+                        title: "Добро пожаловать на ShadowTube!",
+                        description: "Первое видео на нашей платформе",
+                        views: 1,
+                        likes: 1,
+                        date: new Date().toISOString(),
+                        thumbnail: "",
+                        src: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
+                        liked: false,
+                        author: "system"
                     }
-                }
+                ];
+                await saveVideosToGitHub(initialVideos);
+                return initialVideos;
             }
-            
-            async initWebRTC() {
-                this.peerConnection = new RTCPeerConnection({
-                    iceServers: CONFIG.ICE_SERVERS
+        }
+        
+        // Сохранение видео в GitHub
+        async function saveVideosToGitHub(videos) {
+            try {
+                // Получаем текущий SHA файла (если существует)
+                let sha = null;
+                try {
+                    const response = await fetch(API_URL, {
+                        headers: {
+                            'Authorization': `token ${GITHUB_TOKEN}`
+                        }
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        sha = data.sha;
+                    }
+                } catch (e) {}
+                
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(videos, null, 2))));
+                const response = await fetch(API_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Обновление видео данных',
+                        content: content,
+                        sha: sha
+                    })
                 });
                 
-                // Обработчики ICE кандидатов
-                this.peerConnection.onicecandidate = (event) => {
-                    if (event.candidate && this.ws.readyState === WebSocket.OPEN) {
-                        this.ws.send(JSON.stringify({
-                            type: 'candidate',
-                            candidate: event.candidate
-                        }));
-                    }
-                };
-                
-                // Обработчик изменения состояния ICE
-                this.peerConnection.oniceconnectionstatechange = () => {
-                    console.log('ICE connection state:', this.peerConnection.iceConnectionState);
-                    if (this.peerConnection.iceConnectionState === 'failed') {
-                        this.reconnect();
-                    }
-                };
-                
-                // Создаем data channel
-                this.dataChannel = this.peerConnection.createDataChannel('shadowtube');
-                this.setupDataChannel();
-            }
-            
-            setupDataChannel() {
-                this.dataChannel.onopen = () => {
-                    console.log('Data channel opened');
-                    this.updateConnectionState('data_ready');
-                };
-                
-                this.dataChannel.onclose = () => {
-                    console.log('Data channel closed');
-                    this.reconnect();
-                };
-                
-                this.dataChannel.onmessage = (event) => {
-                    this.handleIncomingData(event.data);
-                };
-            }
-            
-            registerOnServer() {
-                this.ws.send(JSON.stringify({
-                    type: 'register',
-                    id: this.peerId,
-                    channel: 'shadowtube-channel'
-                }));
-                
-                this.ws.onmessage = (event) => {
-                    const message = JSON.parse(event.data);
-                    this.handleSignalingMessage(message);
-                };
-                
-                this.ws.onclose = () => {
-                    this.reconnect();
-                };
-            }
-            
-            async handleSignalingMessage(message) {
-                switch (message.type) {
-                    case 'offer':
-                        await this.handleOffer(message);
-                        break;
-                    case 'answer':
-                        await this.handleAnswer(message);
-                        break;
-                    case 'candidate':
-                        await this.handleCandidate(message);
-                        break;
-                    case 'peers':
-                        this.updatePeerCount(message.count);
-                        break;
-                }
-            }
-            
-            async handleOffer(offer) {
-                await this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-                const answer = await this.peerConnection.createAnswer();
-                await this.peerConnection.setLocalDescription(answer);
-                
-                this.ws.send(JSON.stringify({
-                    type: 'answer',
-                    sdp: answer
-                }));
-            }
-            
-            async handleAnswer(answer) {
-                await this.peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-            }
-            
-            async handleCandidate(candidate) {
-                try {
-                    await this.peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-                } catch (e) {
-                    console.error('Error adding ICE candidate:', e);
-                }
-            }
-            
-            reconnect() {
-                if (this.retryCount < CONFIG.MAX_RETRIES) {
-                    this.retryCount++;
-                    const delay = Math.min(CONFIG.RECONNECT_DELAY * this.retryCount, 30000);
-                    console.log(`Reconnecting attempt ${this.retryCount} in ${delay}ms...`);
-                    
-                    setTimeout(() => {
-                        this.cleanup();
-                        this.connect();
-                    }, delay);
-                } else {
-                    this.updateConnectionState('failed', 'Max retries reached');
-                }
-            }
-            
-            cleanup() {
-                if (this.dataChannel) {
-                    this.dataChannel.close();
-                }
-                if (this.peerConnection) {
-                    this.peerConnection.close();
-                }
-                if (this.ws) {
-                    this.ws.close();
-                }
-            }
-            
-            updateConnectionState(state, message = '') {
-                this.connectionState = state;
-                const statusElement = document.getElementById('connection-status');
-                const indicator = document.getElementById('connection-indicator');
-                
-                if (statusElement) {
-                    statusElement.textContent = this.getStatusText(state, message);
+                if (!response.ok) {
+                    throw new Error('Ошибка сохранения данных');
                 }
                 
-                if (indicator) {
-                    indicator.className = 'connection-status-indicator ' + this.getStatusClass(state);
-                }
-                
-                if (state === 'error' || state === 'failed') {
-                    this.showWarning(this.getStatusText(state, message));
-                }
-            }
-            
-            getStatusText(state, message) {
-                const texts = {
-                    'connecting': 'Подключение к P2P сети...',
-                    'connected': 'P2P соединение установлено',
-                    'data_ready': 'Канал передачи данных готов',
-                    'error': `Ошибка: ${message || 'Неизвестная ошибка'}`,
-                    'failed': 'Не удалось установить соединение',
-                    'disconnected': 'Соединение разорвано'
-                };
-                return texts[state] || state;
-            }
-            
-            getStatusClass(state) {
-                const classes = {
-                    'connecting': 'status-connecting',
-                    'connected': 'status-connected',
-                    'data_ready': 'status-connected',
-                    'error': 'status-disconnected',
-                    'failed': 'status-disconnected',
-                    'disconnected': 'status-disconnected'
-                };
-                return classes[state] || '';
-            }
-            
-            showWarning(message) {
-                const banner = document.getElementById('warning-banner');
-                const text = document.getElementById('warning-text');
-                
-                if (banner && text) {
-                    text.textContent = message;
-                    banner.classList.remove('hidden');
-                    
-                    setTimeout(() => {
-                        banner.classList.add('hidden');
-                    }, 10000);
-                }
-            }
-            
-            updatePeerCount(count) {
-                connectedPeers = count;
-                document.getElementById('peer-count').textContent = count;
-            }
-            
-            sendData(data) {
-                if (this.dataChannel && this.dataChannel.readyState === 'open') {
-                    this.dataChannel.send(JSON.stringify(data));
-                    return true;
-                } else if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    this.ws.send(JSON.stringify({
-                        type: 'data',
-                        data: data
-                    }));
-                    return true;
-                }
+                return true;
+            } catch (error) {
+                console.error('Ошибка при сохранении на GitHub:', error);
+                // Локальное сохранение в случае ошибки
+                localStorage.setItem('shadowtube_offline_videos', JSON.stringify(videos));
                 return false;
             }
-            
-            handleIncomingData(data) {
-                try {
-                    const parsedData = JSON.parse(data);
-                    console.log('Received data:', parsedData);
-                    
-                    if (parsedData.type === 'new_video') {
-                        this.handleNewVideo(parsedData.video);
-                    }
-                } catch (e) {
-                    console.error('Error parsing incoming data:', e);
-                }
-            }
-            
-            async handleNewVideo(videoData) {
-                try {
-                    await saveVideoToDB(videoData);
-                    const videos = await getAllVideosFromDB();
-                    displayVideos(videos);
-                } catch (e) {
-                    console.error('Error handling new video:', e);
-                }
-            }
-        }
-
-        // ================== ФУНКЦИИ ДЛЯ РАБОТЫ С ВИДЕО ==================
-        
-        // Инициализация IndexedDB
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                updateConnectionStatus('Инициализация базы данных...', 20);
-                
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = (event) => {
-                    console.error('Ошибка открытия DB:', event.target.error);
-                    updateConnectionStatus('Ошибка базы данных', 0, true);
-                    reject(event.target.error);
-                };
-                
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    console.log('DB успешно открыта');
-                    updateConnectionStatus('База данных готова', 40);
-                    resolve(db);
-                    updateStorageUsage();
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains(STORE_NAME)) {
-                        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-                        console.log('Создано хранилище:', STORE_NAME);
-                    }
-                };
-            });
         }
         
-        // Обновление статуса подключения
-        function updateConnectionStatus(text, progress, isError = false) {
-            connectionStatus.textContent = text;
-            progressBarConnection.style.width = `${progress}%`;
-            
-            if (isError) {
-                connectionStatus.style.color = 'var(--red-alert)';
-                connectionIndicator.className = 'connection-status-indicator status-disconnected';
-            } else {
-                connectionStatus.style.color = 'var(--text-light)';
-                connectionIndicator.className = 'connection-status-indicator status-connecting';
-            }
-            
-            if (progress >= 100) {
-                setTimeout(() => {
-                    connectionModal.classList.add('hidden');
-                }, 1000);
+        // Загрузка видео с GitHub
+        async function loadVideosFromGitHub() {
+            try {
+                const response = await fetch(RAW_DATA_URL + '?t=' + Date.now());
+                if (!response.ok) throw new Error('Ошибка загрузки');
+                return await response.json();
+            } catch (error) {
+                console.error('Ошибка загрузки с GitHub:', error);
+                // Пробуем загрузить локальные данные
+                const localData = localStorage.getItem('shadowtube_offline_videos');
+                return localData ? JSON.parse(localData) : [];
             }
         }
         
-        // Загрузка демо-видео
-        async function loadDemoVideos() {
-            const videos = await getAllVideosFromDB();
-            if (videos.length === 0) {
-                console.log('Loading demo videos for first user');
-                
-                for (const video of DEMO_VIDEOS) {
-                    await saveVideoToDB(video);
-                }
-
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(DEMO_VIDEOS));
-                displayVideos(DEMO_VIDEOS);
-            }
-        }
-
-        // Сохранение видео в IndexedDB
-        async function saveVideoToDB(video) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                
-                const request = store.put(video);
-                
-                request.onsuccess = () => {
-                    console.log('Видео сохранено в DB:', video.id);
-                    resolve();
-                };
-                
-                request.onerror = (event) => {
-                    console.error('Ошибка сохранения видео:', event.target.error);
-                    reject(event.target.error);
-                };
-            });
-        }
-        
-        // Получение всех видео из IndexedDB
-        async function getAllVideosFromDB() {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.getAll();
-                
-                request.onsuccess = () => {
-                    resolve(request.result || []);
-                };
-                
-                request.onerror = (event) => {
-                    console.error('Ошибка получения видео:', event.target.error);
-                    reject(event.target.error);
-                };
-            });
-        }
-        
-        // Получение видео по ID
-        async function getVideoFromDB(id) {
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.get(id);
-                
-                request.onsuccess = () => {
-                    resolve(request.result);
-                };
-                
-                request.onerror = (event) => {
-                    console.error('Ошибка получения видео:', event.target.error);
-                    reject(event.target.error);
-                };
-            });
-        }
-        
-        // Обновление информации о хранилище
-        async function updateStorageUsage() {
-            if (!navigator.storage || !navigator.storage.estimate) {
-                console.log('Storage Estimation API не поддерживается');
-                return;
-            }
-            
-            const estimate = await navigator.storage.estimate();
-            const percentUsed = (estimate.usage / estimate.quota * 100).toFixed(1);
-            const usedMB = (estimate.usage / (1024 * 1024)).toFixed(1);
-            const quotaMB = (estimate.quota / (1024 * 1024)).toFixed(1);
-            
-            document.getElementById('storage-used').textContent = `${usedMB} MB (${percentUsed}%)`;
-            document.getElementById('file-size').textContent = `Лимит: ${quotaMB} MB`;
-        }
-        
-        // Чтение файла как ArrayBuffer
-        function readFileAsArrayBuffer(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsArrayBuffer(file);
-            });
-        }
-        
-        // Генерация превью из видео
-        function generateThumbnail(videoFile) {
-            return new Promise((resolve) => {
-                const video = document.createElement('video');
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                video.src = URL.createObjectURL(videoFile);
-                
-                video.addEventListener('loadedmetadata', () => {
-                    video.currentTime = 0.1;
-                });
-                
-                video.addEventListener('seeked', () => {
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    
-                    canvas.toBlob((blob) => {
-                        const thumbnailUrl = URL.createObjectURL(blob);
-                        resolve({ blob, url: thumbnailUrl });
-                    }, 'image/jpeg', 0.8);
-                });
-                
-                video.addEventListener('error', () => {
-                    const placeholder = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogIzBhMGEwYSI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiM3YTJjYmYiIG9wYWNpdHk9IjAuMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZjhmOWZhIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiPk5vIFByZXZpZXc8L3RleHQ+PC9zdmc+';
-                    resolve({ blob: null, url: placeholder });
-                });
-                
-                video.load();
-            });
-        }
-        
-        // Преобразование Blob в base64
-        function blobToBase64(blob) {
-            if (!blob) return Promise.resolve(null);
-            
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    resolve(reader.result);
-                };
-                reader.readAsDataURL(blob);
-            });
-        }
-        
-        // Форматирование чисел (1K, 1.2M)
+        // Форматирование чисел (1K, 1.2M и т.д.)
         function formatNumber(num) {
             if (num >= 1000000) {
                 return (num / 1000000).toFixed(1) + 'M';
@@ -1389,18 +728,32 @@
             }
         }
         
-        // Форматирование размера файла
-        function formatFileSize(bytes) {
-            if (bytes >= 1073741824) {
-                return (bytes / 1073741824).toFixed(1) + ' GB';
-            }
-            if (bytes >= 1048576) {
-                return (bytes / 1048576).toFixed(1) + ' MB';
-            }
-            if (bytes >= 1024) {
-                return (bytes / 1024).toFixed(1) + ' KB';
-            }
-            return bytes + ' bytes';
+        // Генерация превью из видео
+        function generateThumbnail(videoFile) {
+            return new Promise((resolve) => {
+                const video = document.createElement('video');
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                video.src = URL.createObjectURL(videoFile);
+                
+                video.addEventListener('loadedmetadata', () => {
+                    video.currentTime = 0;
+                });
+                
+                video.addEventListener('seeked', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    canvas.toBlob((blob) => {
+                        const thumbnailUrl = URL.createObjectURL(blob);
+                        resolve({ blob, url: thumbnailUrl });
+                    }, 'image/jpeg', 0.8);
+                });
+                
+                video.load();
+            });
         }
         
         // Отображение всех видео
@@ -1412,27 +765,10 @@
                 return;
             }
             
-            for (const video of videos) {
+            videos.forEach(video => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
                 videoCard.setAttribute('data-id', video.id);
-                
-                let videoUrl;
-                if (video.src) {
-                    videoUrl = video.src;
-                } else if (video.isDemo) {
-                    videoUrl = `https://samplelib.com/lib/preview/mp4/sample-${video.id === 'demo1' ? '5s' : '10s'}.mp4`;
-                } else {
-                    const fullVideo = await getVideoFromDB(video.id);
-                    if (fullVideo && fullVideo.fileData) {
-                        videoUrl = URL.createObjectURL(new Blob([fullVideo.fileData], { type: fullVideo.fileType }));
-                        video.src = videoUrl;
-                    } else {
-                        console.error('Видео не найдено в DB:', video.id);
-                        continue;
-                    }
-                }
-                
                 videoCard.innerHTML = `
                     <div class="video-thumbnail-container">
                         <img class="video-thumbnail" src="${video.thumbnail || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogIzBhMGEwYSI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiM3YTJjYmYiIG9wYWNpdHk9IjAuMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZjhmOWZhIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiPk5vIFByZXZpZXc8L3RleHQ+PC9zdmc+'}" alt="${video.title}">
@@ -1448,7 +784,7 @@
                             </span>
                         </div>
                         <div class="video-date">${formatDate(video.date)}</div>
-                        <div class="file-size">${formatFileSize(video.fileSize)}</div>
+                        ${video.author ? `<div class="video-author">@${video.author}</div>` : ''}
                     </div>
                 `;
                 
@@ -1459,89 +795,143 @@
                     likeVideo(videoId);
                 });
                 
-                videoCard.addEventListener('click', async function() {
+                videoCard.addEventListener('click', function() {
                     const videoId = this.getAttribute('data-id');
-                    await playVideo(videoId);
+                    playVideo(videoId);
                 });
                 
                 videoGrid.appendChild(videoCard);
-            }
+            });
         }
         
         // Воспроизведение видео
         async function playVideo(videoId) {
-            let video = currentVideo;
+            const videos = await loadVideosFromGitHub();
+            const video = videos.find(v => v.id === videoId);
             
-            if (!video || video.id !== videoId) {
-                video = await getVideoFromDB(videoId);
-                if (!video) {
-                    console.error('Видео не найдено:', videoId);
-                    return;
-                }
-                
-                if (video.isDemo) {
-                    video.src = `https://samplelib.com/lib/preview/mp4/sample-${videoId === 'demo1' ? '5s' : '10s'}.mp4`;
-                } else if (!video.src) {
-                    video.src = URL.createObjectURL(new Blob([video.fileData], { type: video.fileType }));
-                }
-                
+            if (video) {
                 currentVideo = video;
+                videoPlayer.src = video.src;
+                videoPlayer.poster = video.thumbnail || '';
+                videoPlayerModal.classList.add('active');
+                videoPlayer.play();
+                
+                // Увеличиваем просмотры
+                await incrementViews(videoId);
             }
-            
-            await incrementViews(videoId);
-            
-            videoPlayer.src = video.src;
-            videoPlayer.poster = video.thumbnail || '';
-            videoPlayerModal.classList.add('active');
-            videoPlayer.play();
         }
+        
+        // Закрытие плеера
+        playerCloseBtn.addEventListener('click', () => {
+            videoPlayerModal.classList.remove('active');
+            videoPlayer.pause();
+        });
+        
+        // Обновление прогресс-бара
+        videoPlayer.addEventListener('timeupdate', () => {
+            const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        });
+        
+        // Перемотка при клике на прогресс-бар
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            videoPlayer.currentTime = pos * videoPlayer.duration;
+        });
         
         // Увеличение просмотров
         async function incrementViews(videoId) {
-            const videos = await getAllVideosFromDB();
+            const videos = await loadVideosFromGitHub();
             const videoIndex = videos.findIndex(v => v.id === videoId);
             
             if (videoIndex !== -1) {
                 videos[videoIndex].views += 1;
-                await saveVideoToDB(videos[videoIndex]);
-                
-                const localVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                const localVideoIndex = localVideos.findIndex(v => v.id === videoId);
-                if (localVideoIndex !== -1) {
-                    localVideos[localVideoIndex].views += 1;
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(localVideos));
-                }
-                
+                await saveVideosToGitHub(videos);
                 displayVideos(videos);
             }
         }
         
         // Лайк видео
         async function likeVideo(videoId) {
-            const videos = await getAllVideosFromDB();
+            const videos = await loadVideosFromGitHub();
             const videoIndex = videos.findIndex(v => v.id === videoId);
             
-            if (videoIndex !== -1 && !videos[videoIndex].liked) {
-                videos[videoIndex].likes += 1;
-                videos[videoIndex].liked = true;
-                await saveVideoToDB(videos[videoIndex]);
-                
-                const localVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                const localVideoIndex = localVideos.findIndex(v => v.id === videoId);
-                if (localVideoIndex !== -1) {
-                    localVideos[localVideoIndex].likes += 1;
-                    localVideos[localVideoIndex].liked = true;
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(localVideos));
+            if (videoIndex !== -1) {
+                if (!videos[videoIndex].liked) {
+                    videos[videoIndex].likes += 1;
+                    videos[videoIndex].liked = true;
+                    await saveVideosToGitHub(videos);
+                    displayVideos(videos);
                 }
-                
-                displayVideos(videos);
             }
         }
+        
+        // Добавление нового видео
+        videoUploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const title = document.getElementById('video-title').value;
+            const description = document.getElementById('video-description').value;
+            const file = videoFileInput.files[0];
+            
+            if (!file) {
+                alert('Пожалуйста, выберите видео файл');
+                return;
+            }
+            
+            if (file.size > 100 * 1024 * 1024) {
+                alert('Файл слишком большой. Максимальный размер: 100MB');
+                return;
+            }
+            
+            uploadStatus.textContent = 'Генерация превью...';
+            uploadStatus.style.color = 'var(--text-gray)';
+            
+            try {
+                const { blob: thumbnailBlob, url: thumbnailUrl } = await generateThumbnail(file);
+                
+                const newVideo = {
+                    id: Date.now().toString(),
+                    title: title,
+                    description: description,
+                    views: 0,
+                    likes: 0,
+                    date: new Date().toISOString(),
+                    thumbnail: thumbnailUrl,
+                    src: URL.createObjectURL(file),
+                    liked: false,
+                    author: currentUser
+                };
+                
+                const videos = await loadVideosFromGitHub();
+                videos.unshift(newVideo);
+                
+                await saveVideosToGitHub(videos);
+                
+                videoUploadForm.reset();
+                fileLabel.textContent = "Перетащите видео сюда или нажмите для выбора\nМаксимальный размер: 100MB";
+                
+                uploadStatus.textContent = 'Видео успешно загружено!';
+                uploadStatus.style.color = 'var(--purple-light)';
+                
+                setTimeout(() => {
+                    uploadModal.classList.remove('active');
+                    uploadStatus.textContent = '';
+                }, 1000);
+                
+                displayVideos(videos);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                uploadStatus.textContent = 'Ошибка при загрузке видео';
+                uploadStatus.style.color = '#ff6b6b';
+            }
+        });
         
         // Поиск видео
         searchInput.addEventListener('input', async () => {
             const searchTerm = searchInput.value.toLowerCase();
-            const videos = await getAllVideosFromDB();
+            const videos = await loadVideosFromGitHub();
             
             if (searchTerm === '') {
                 displayVideos(videos);
@@ -1550,235 +940,68 @@
             
             const filteredVideos = videos.filter(video => 
                 video.title.toLowerCase().includes(searchTerm) || 
-                video.description.toLowerCase().includes(searchTerm)
+                video.description.toLowerCase().includes(searchTerm) ||
+                (video.author && video.author.toLowerCase().includes(searchTerm))
             );
             
             displayVideos(filteredVideos);
         });
         
-        // Активация локального режима
-        function activateLocalMode() {
-            console.log('Activating local mode with demo content');
-            loadDemoVideos();
+        // Инициализация при загрузке страницы
+        window.addEventListener('DOMContentLoaded', async () => {
+            const videos = await initializeStorage();
+            displayVideos(videos);
             
-            document.getElementById('connection-status').textContent = 'Локальный режим';
-            document.getElementById('connection-indicator').className = 
-                'connection-status-indicator status-disconnected';
-            document.getElementById('peer-count').textContent = '0';
-        }
+            // Обновляем список каждые 30 секунд
+            setInterval(async () => {
+                const newVideos = await loadVideosFromGitHub();
+                displayVideos(newVideos);
+            }, 30000);
+        });
+
+        // Открытие/закрытие модальных окон
+        uploadBtn.addEventListener('click', () => {
+            uploadModal.classList.add('active');
+        });
         
-        // Обработчик кнопки "Повторить"
-        document.getElementById('retry-btn').addEventListener('click', () => {
-            document.getElementById('warning-banner').classList.add('hidden');
-            if (p2pManager) {
-                p2pManager.connect();
+        closeBtn.addEventListener('click', () => {
+            uploadModal.classList.remove('active');
+        });
+        
+        uploadModal.addEventListener('click', (e) => {
+            if (e.target === uploadModal) {
+                uploadModal.classList.remove('active');
             }
         });
         
-        // Инициализация при загрузке страницы
-        window.addEventListener('DOMContentLoaded', async () => {
-            // Проверяем поддержку WebRTC
-            if (!window.RTCPeerConnection) {
-                console.error("WebRTC не поддерживается в этом браузере");
-                activateLocalMode();
-                return;
-            }
-
-            // Инициализируем P2P соединение
-            p2pManager = new P2PManager();
-            const p2pSuccess = await p2pManager.connect();
-            
-            if (!p2pSuccess && connectedPeers === 0) {
-                activateLocalMode();
-            }
-
-            // Инициализируем DB
-            await initDB();
-            
-            // Загружаем видео из DB
-            const videos = await getAllVideosFromDB();
-            
-            // Если нет видео, проверяем localStorage
-            if (videos.length === 0) {
-                const localVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                if (localVideos.length > 0) {
-                    for (const video of localVideos) {
-                        await saveVideoToDB(video);
-                    }
-                    videos.push(...localVideos);
-                }
-            }
-            
-            // Отображаем видео
-            displayVideos(videos);
-            
-            // Инициализация обработчиков событий интерфейса
-            uploadBtn.addEventListener('click', () => {
-                uploadModal.classList.add('active');
-            });
-            
-            closeBtn.addEventListener('click', () => {
-                uploadModal.classList.remove('active');
-            });
-            
-            playerCloseBtn.addEventListener('click', () => {
+        videoPlayerModal.addEventListener('click', (e) => {
+            if (e.target === videoPlayerModal) {
                 videoPlayerModal.classList.remove('active');
                 videoPlayer.pause();
-            });
+            }
+        });
+        
+        // Обработка перетаскивания файлов
+        fileLabel.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileLabel.style.borderColor = 'var(--purple-light)';
+            fileLabel.style.backgroundColor = 'rgba(123, 44, 191, 0.1)';
+        });
+        
+        fileLabel.addEventListener('dragleave', () => {
+            fileLabel.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            fileLabel.style.backgroundColor = 'transparent';
+        });
+        
+        fileLabel.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileLabel.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            fileLabel.style.backgroundColor = 'transparent';
             
-            // Обработчик загрузки видео
-            videoUploadForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const title = videoTitleInput.value;
-                const description = videoDescriptionInput.value;
-                const file = videoFileInput.files[0];
-                
-                if (!file) {
-                    alert('Пожалуйста, выберите видео файл');
-                    return;
-                }
-                
-                // Проверяем размер файла (ограничение 100MB)
-                if (file.size > 100 * 1024 * 1024) {
-                    alert('Максимальный размер видео - 100MB');
-                    return;
-                }
-                
-                // Показываем статус загрузки
-                uploadStatus.textContent = 'Загрузка видео...';
-                uploadStatus.style.color = 'var(--text-gray)';
-                
-                try {
-                    // Генерируем превью
-                    uploadStatus.textContent = 'Генерация превью...';
-                    const { blob: thumbnailBlob, url: thumbnailUrl } = await generateThumbnail(file);
-                    
-                    // Читаем видео файл как ArrayBuffer
-                    uploadStatus.textContent = 'Обработка видео...';
-                    const videoArrayBuffer = await readFileAsArrayBuffer(file);
-                    
-                    // Создаем объект видео
-                    const newVideo = {
-                        id: Date.now().toString(),
-                        title: title,
-                        description: description,
-                        views: 0,
-                        likes: 0,
-                        date: new Date().toISOString(),
-                        thumbnail: thumbnailUrl,
-                        thumbnailBlob: await blobToBase64(thumbnailBlob),
-                        fileName: file.name,
-                        fileType: file.type,
-                        fileSize: file.size,
-                        fileData: videoArrayBuffer,
-                        liked: false,
-                        isDemo: false
-                    };
-                    
-                    // Сохраняем видео в IndexedDB
-                    uploadStatus.textContent = 'Сохранение видео...';
-                    await saveVideoToDB(newVideo);
-                    
-                    // Отправляем новое видео другим пирам через P2P
-                    if (p2pManager) {
-                        p2pManager.sendData({
-                            type: 'new_video',
-                            video: {
-                                id: newVideo.id,
-                                title: newVideo.title,
-                                description: newVideo.description,
-                                views: newVideo.views,
-                                likes: newVideo.likes,
-                                date: newVideo.date,
-                                thumbnail: newVideo.thumbnail,
-                                thumbnailBlob: newVideo.thumbnailBlob,
-                                fileName: newVideo.fileName,
-                                fileType: newVideo.fileType,
-                                fileSize: newVideo.fileSize,
-                                liked: newVideo.liked,
-                                isDemo: newVideo.isDemo
-                            }
-                        });
-                    }
-                    
-                    // Обновляем список видео
-                    const videos = await getAllVideosFromDB();
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(videos.map(v => ({
-                        id: v.id,
-                        title: v.title,
-                        description: v.description,
-                        views: v.views,
-                        likes: v.likes,
-                        date: v.date,
-                        thumbnail: v.thumbnail,
-                        thumbnailBlob: v.thumbnailBlob,
-                        fileName: v.fileName,
-                        fileType: v.fileType,
-                        fileSize: v.fileSize,
-                        liked: v.liked,
-                        isDemo: v.isDemo
-                    }))));
-                    
-                    // Создаем Blob URL для воспроизведения
-                    newVideo.src = URL.createObjectURL(new Blob([newVideo.fileData], { type: newVideo.fileType }));
-                    
-                    // Очистка формы
-                    videoUploadForm.reset();
-                    fileLabel.textContent = "Перетащите видео сюда или нажмите для выбора\nМаксимальный размер: 100MB";
-                    
-                    // Успешный статус
-                    uploadStatus.textContent = 'Видео успешно загружено!';
-                    uploadStatus.style.color = 'var(--purple-light)';
-                    
-                    // Обновляем использование хранилища
-                    await updateStorageUsage();
-                    
-                    // Закрытие модального окна через 1 секунду
-                    setTimeout(() => {
-                        uploadModal.classList.remove('active');
-                        uploadStatus.textContent = '';
-                    }, 1000);
-                    
-                    // Обновление списка видео
-                    displayVideos(videos);
-                    
-                } catch (error) {
-                    console.error('Ошибка при загрузке видео:', error);
-                    uploadStatus.textContent = 'Ошибка при загрузке видео';
-                    uploadStatus.style.color = 'var(--red-alert)';
-                }
-            });
-            
-            // Обработчик перетаскивания файлов
-            fileLabel.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                fileLabel.style.borderColor = 'var(--purple-light)';
-                fileLabel.style.backgroundColor = 'rgba(123, 44, 191, 0.1)';
-            });
-            
-            fileLabel.addEventListener('dragleave', () => {
-                fileLabel.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                fileLabel.style.backgroundColor = 'transparent';
-            });
-            
-            fileLabel.addEventListener('drop', (e) => {
-                e.preventDefault();
-                fileLabel.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                fileLabel.style.backgroundColor = 'transparent';
-                
-                if (e.dataTransfer.files.length) {
-                    videoFileInput.files = e.dataTransfer.files;
-                    fileLabel.textContent = `Выбран файл: ${e.dataTransfer.files[0].name}`;
-                }
-            });
-            
-            // Обработчик выбора файла
-            videoFileInput.addEventListener('change', () => {
-                if (videoFileInput.files.length) {
-                    fileLabel.textContent = `Выбран файл: ${videoFileInput.files[0].name}`;
-                }
-            });
+            if (e.dataTransfer.files.length) {
+                videoFileInput.files = e.dataTransfer.files;
+                fileLabel.textContent = e.dataTransfer.files[0].name;
+            }
         });
     </script>
 </body>
