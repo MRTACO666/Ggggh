@@ -385,7 +385,6 @@
             color: var(--purple-light);
         }
         
-        /* Стили для просмотра видео */
         .video-player-modal {
             position: fixed;
             top: 0;
@@ -417,16 +416,6 @@
             width: 100%;
             border-radius: 8px;
             outline: none;
-        }
-        
-        /* Кастомный стиль для ползунка прогресса */
-        .video-player::-webkit-media-controls-timeline {
-            display: none;
-        }
-        
-        .video-player::-webkit-media-controls-current-time-display,
-        .video-player::-webkit-media-controls-time-remaining-display {
-            display: none;
         }
         
         .custom-controls {
@@ -499,7 +488,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        /* Анимация загрузки */
         @keyframes pulse {
             0% { opacity: 0.6; }
             50% { opacity: 1; }
@@ -520,7 +508,6 @@
             font-size: 0.9rem;
         }
         
-        /* Стили для меню подключения */
         .connection-modal {
             position: fixed;
             top: 0;
@@ -588,7 +575,6 @@
             pointer-events: none;
         }
         
-        /* Информация о хранилище и подключении */
         .storage-info {
             position: fixed;
             bottom: 150px;
@@ -650,7 +636,6 @@
             box-shadow: 0 0 10px var(--red-alert);
         }
         
-        /* Стили для предупреждений */
         .warning-banner {
             position: fixed;
             top: 10px;
@@ -687,7 +672,7 @@
 </head>
 <body>
     <div class="connection-modal" id="connection-modal">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjN2EyY2JmIiBkPSJNMjU2IDMyYzEyMy41IDAgMjI0IDEwMC41IDIyNCAyMjRTMzc5LjUgNDgwIDI1NiA0ODBTMzIgMzc5LjUgMzIgMjU2IDEzMi41IDMyIDI1NiAzMnpNMTI4IDI1NmMwIDcwLjcgNTcuMyAxMjggMTI4IDEyOHMxMjgtNTcuMyAxMjgtMTI4LTU3LjMtMTI4LTEyOC0xMjgtMTI4IDU3LjMtMTI4IDEyOHptOTYgMGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMiAxNC4zLTMyIDMyLTMyIDMyIDE0LjMgMzIgMzJ6Ii8+PHBhdGggZmlsbD0iI2Y4ZjlmYSIgZD0iTTI1NiAxMjhjLTcwLjcgMC0xMjggNTcuMy0xMjggMTI4czU3LjMgMTI4IDEyOCAxMjggMTI4LTU3LjMgMTI4LTEyOC01Ny4zLTEyOC0xMjgtMTI4em0wIDE2MGMtMTcuNyAwLTMyLTE0LjMtMzItMzJzMTQuMy0zMiAzMi0zMiAzMiAxNC4zIDMyIDMyLTE0LjMgMzItMzIgMzJ6Ii8+PC9zdmc+" alt="ShadowTube Logo" class="connection-logo">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjN2EyY2JmIiBkPSJNMjU2IDMyYzEyMy41IDAgMjI0IDEwMC41IDIyNCAyMjRTMzc5LjUgNDgwIDI1NiA0ODBTMzIgMzc5LjUgMzIgMjU2IDEzMi41IDMyIDI1NiAzMnpNMTI4IDI1NmMwIDcwLjcgNTcuMyAxMjggMTI4IDEyOHMxMjgtNTcuMyAxMjgtMTI4LTU3LjMtMTI4LTEyOC0xMjgtMTI4IDU3LjMtMTI4IDEyOHptOTYgMGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMiAxNC4zLTMyIDMyLTMyIDMyIDE0LjMgMzIgMzJ6Ii8+PHBhdGggZmlsbD0iI2Y4ZjlmYSIgZD0iTTI1NiAxMjhjLTcwLjcgMC0xMjggNTcuMy0xMjggMTI4czU3LjMgMTI4IDEyOCAxMjggMTI4LTU3LjMgMTI4LTEyOC01Ny4zLTEyOC0xMjgtMTI4em0wIDE2MGMtMTcuNyAwLTMyLTE4LjMtMzItMzJzMTQuMy0zMiAzMi0zMiAzMiAxOC4zIDMyIDMyLTE0LjMgMzItMzIgMzJ6Ii8+PC9zdmc+" alt="ShadowTube Logo" class="connection-logo">
         <h2 class="connection-title">Подключение к ShadowTube</h2>
         <p class="connection-status" id="connection-status">Устанавливаем соединение...</p>
         <div class="progress-container-connection">
@@ -783,20 +768,24 @@
                 'wss://free-p2p-signaling.herokuapp.com'
             ],
             
-            // STUN/TURN серверы
+            // Исправленные STUN/TURN серверы (без параметров в URL)
             ICE_SERVERS: [
                 { urls: "stun:stun.l.google.com:19302" },
-                { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+                { urls: "stun:global.stun.twilio.com:3478" },
                 { 
                     urls: "turn:turn.bistri.com:80",
                     credential: "homeo",
                     username: "homeo"
                 },
                 {
-                    urls: "turn:turn.anyfirewall.com:443?transport=tcp",
+                    urls: "turn:turn.anyfirewall.com:443",
                     credential: "webrtc",
                     username: "webrtc"
-                }
+                },
+                // Дополнительные резервные серверы
+                { urls: "stun:stun1.l.google.com:19302" },
+                { urls: "stun:stun2.l.google.com:19302" },
+                { urls: "stun:stun.voipbuster.com:3478" }
             ],
             
             // Таймауты
@@ -872,7 +861,7 @@
         const playerCloseBtn = document.getElementById('player-close-btn');
         const progressContainer = document.getElementById('progress-container');
         const progressBar = document.getElementById('progress-bar');
-        
+
         // ================== P2P МЕНЕДЖЕР ==================
         class P2PManager {
             constructor() {
@@ -1046,7 +1035,7 @@
             reconnect() {
                 if (this.retryCount < CONFIG.MAX_RETRIES) {
                     this.retryCount++;
-                    const delay = Math.min(CONFIG.RECONNECT_DELAY * this.retryCount, 30000); // Макс 30 сек
+                    const delay = Math.min(CONFIG.RECONNECT_DELAY * this.retryCount, 30000);
                     console.log(`Reconnecting attempt ${this.retryCount} in ${delay}ms...`);
                     
                     setTimeout(() => {
@@ -1083,7 +1072,6 @@
                     indicator.className = 'connection-status-indicator ' + this.getStatusClass(state);
                 }
                 
-                // Показываем предупреждение при ошибках
                 if (state === 'error' || state === 'failed') {
                     this.showWarning(this.getStatusText(state, message));
                 }
@@ -1121,7 +1109,6 @@
                     text.textContent = message;
                     banner.classList.remove('hidden');
                     
-                    // Автоматическое скрытие через 10 секунд
                     setTimeout(() => {
                         banner.classList.add('hidden');
                     }, 10000);
@@ -1135,11 +1122,9 @@
             
             sendData(data) {
                 if (this.dataChannel && this.dataChannel.readyState === 'open') {
-                    // Пытаемся отправить через P2P
                     this.dataChannel.send(JSON.stringify(data));
                     return true;
                 } else if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                    // Fallback на WebSocket
                     this.ws.send(JSON.stringify({
                         type: 'data',
                         data: data
@@ -1154,8 +1139,6 @@
                     const parsedData = JSON.parse(data);
                     console.log('Received data:', parsedData);
                     
-                    // Здесь можно обрабатывать входящие данные от других пиров
-                    // Например, обновлять список видео
                     if (parsedData.type === 'new_video') {
                         this.handleNewVideo(parsedData.video);
                     }
@@ -1166,10 +1149,7 @@
             
             async handleNewVideo(videoData) {
                 try {
-                    // Сохраняем новое видео в базу данных
                     await saveVideoToDB(videoData);
-                    
-                    // Обновляем список видео
                     const videos = await getAllVideosFromDB();
                     displayVideos(videos);
                 } catch (e) {
@@ -1231,13 +1211,12 @@
             }
         }
         
-        // Загрузка демо-видео для первых пользователей
+        // Загрузка демо-видео
         async function loadDemoVideos() {
             const videos = await getAllVideosFromDB();
             if (videos.length === 0) {
                 console.log('Loading demo videos for first user');
                 
-                // Для демо-видео мы не храним полные файлы, только метаданные
                 for (const video of DEMO_VIDEOS) {
                     await saveVideoToDB(video);
                 }
@@ -1285,7 +1264,7 @@
             });
         }
         
-        // Получение видео по ID из IndexedDB
+        // Получение видео по ID
         async function getVideoFromDB(id) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction([STORE_NAME], 'readonly');
@@ -1303,7 +1282,7 @@
             });
         }
         
-        // Обновление информации об использованном хранилище
+        // Обновление информации о хранилище
         async function updateStorageUsage() {
             if (!navigator.storage || !navigator.storage.estimate) {
                 console.log('Storage Estimation API не поддерживается');
@@ -1339,17 +1318,14 @@
                 video.src = URL.createObjectURL(videoFile);
                 
                 video.addEventListener('loadedmetadata', () => {
-                    // Устанавливаем время для захвата кадра (первый кадр)
-                    video.currentTime = 0.1; // Небольшое смещение для корректной работы
+                    video.currentTime = 0.1;
                 });
                 
                 video.addEventListener('seeked', () => {
-                    // Рисуем кадр на canvas
                     canvas.width = video.videoWidth;
                     canvas.height = video.videoHeight;
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     
-                    // Преобразуем canvas в Blob
                     canvas.toBlob((blob) => {
                         const thumbnailUrl = URL.createObjectURL(blob);
                         resolve({ blob, url: thumbnailUrl });
@@ -1357,8 +1333,6 @@
                 });
                 
                 video.addEventListener('error', () => {
-                    // Если не удалось создать превью, используем заглушку
-                    console.log('Ошибка генерации превью, используем заглушку');
                     const placeholder = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogIzBhMGEwYSI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiM3YTJjYmYiIG9wYWNpdHk9IjAuMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZjhmOWZhIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiPk5vIFByZXZpZXc8L3RleHQ+PC9zdmc+';
                     resolve({ blob: null, url: placeholder });
                 });
@@ -1380,7 +1354,7 @@
             });
         }
         
-        // Форматирование чисел (1K, 1.2M и т.д.)
+        // Форматирование чисел (1K, 1.2M)
         function formatNumber(num) {
             if (num >= 1000000) {
                 return (num / 1000000).toFixed(1) + 'M';
@@ -1443,19 +1417,16 @@
                 videoCard.className = 'video-card';
                 videoCard.setAttribute('data-id', video.id);
                 
-                // Получаем Blob URL для видео
                 let videoUrl;
                 if (video.src) {
                     videoUrl = video.src;
                 } else if (video.isDemo) {
-                    // Для демо-видео используем статическую ссылку
                     videoUrl = `https://samplelib.com/lib/preview/mp4/sample-${video.id === 'demo1' ? '5s' : '10s'}.mp4`;
                 } else {
-                    // Если видео еще не загружено в память, получаем его из IndexedDB
                     const fullVideo = await getVideoFromDB(video.id);
                     if (fullVideo && fullVideo.fileData) {
                         videoUrl = URL.createObjectURL(new Blob([fullVideo.fileData], { type: fullVideo.fileType }));
-                        video.src = videoUrl; // Кэшируем URL
+                        video.src = videoUrl;
                     } else {
                         console.error('Видео не найдено в DB:', video.id);
                         continue;
@@ -1481,7 +1452,6 @@
                     </div>
                 `;
                 
-                // Обработчики событий
                 const likeBtn = videoCard.querySelector('.video-likes');
                 likeBtn.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -1502,7 +1472,6 @@
         async function playVideo(videoId) {
             let video = currentVideo;
             
-            // Если это новое видео, загружаем его из DB
             if (!video || video.id !== videoId) {
                 video = await getVideoFromDB(videoId);
                 if (!video) {
@@ -1510,21 +1479,17 @@
                     return;
                 }
                 
-                // Для демо-видео используем статическую ссылку
                 if (video.isDemo) {
                     video.src = `https://samplelib.com/lib/preview/mp4/sample-${videoId === 'demo1' ? '5s' : '10s'}.mp4`;
                 } else if (!video.src) {
-                    // Для обычных видео создаем Blob URL
                     video.src = URL.createObjectURL(new Blob([video.fileData], { type: video.fileType }));
                 }
                 
                 currentVideo = video;
             }
             
-            // Увеличиваем просмотры
             await incrementViews(videoId);
             
-            // Воспроизводим видео
             videoPlayer.src = video.src;
             videoPlayer.poster = video.thumbnail || '';
             videoPlayerModal.classList.add('active');
@@ -1540,7 +1505,6 @@
                 videos[videoIndex].views += 1;
                 await saveVideoToDB(videos[videoIndex]);
                 
-                // Обновляем localStorage
                 const localVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
                 const localVideoIndex = localVideos.findIndex(v => v.id === videoId);
                 if (localVideoIndex !== -1) {
@@ -1548,7 +1512,6 @@
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(localVideos));
                 }
                 
-                // Обновляем отображение
                 displayVideos(videos);
             }
         }
@@ -1563,7 +1526,6 @@
                 videos[videoIndex].liked = true;
                 await saveVideoToDB(videos[videoIndex]);
                 
-                // Обновляем localStorage
                 const localVideos = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
                 const localVideoIndex = localVideos.findIndex(v => v.id === videoId);
                 if (localVideoIndex !== -1) {
@@ -1572,7 +1534,6 @@
                     localStorage.setItem(STORAGE_KEY, JSON.stringify(localVideos));
                 }
                 
-                // Обновляем отображение
                 displayVideos(videos);
             }
         }
@@ -1598,10 +1559,8 @@
         // Активация локального режима
         function activateLocalMode() {
             console.log('Activating local mode with demo content');
-            // Загружаем демо-контент для локального использования
             loadDemoVideos();
             
-            // Обновляем статус
             document.getElementById('connection-status').textContent = 'Локальный режим';
             document.getElementById('connection-indicator').className = 
                 'connection-status-indicator status-disconnected';
@@ -1620,21 +1579,19 @@
         window.addEventListener('DOMContentLoaded', async () => {
             // Проверяем поддержку WebRTC
             if (!window.RTCPeerConnection) {
-                alert('Ваш браузер не поддерживает WebRTC. Пожалуйста, используйте современный браузер.');
+                console.error("WebRTC не поддерживается в этом браузере");
                 activateLocalMode();
                 return;
             }
-            
+
             // Инициализируем P2P соединение
             p2pManager = new P2PManager();
             const p2pSuccess = await p2pManager.connect();
             
             if (!p2pSuccess && connectedPeers === 0) {
-                // Если P2P не работает и нет других пользователей,
-                // активируем локальный режим с демо-видео
                 activateLocalMode();
             }
-            
+
             // Инициализируем DB
             await initDB();
             
