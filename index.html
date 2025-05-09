@@ -3,1006 +3,543 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShadowTube</title>
+    <title>BrainRot | Экстремальный контент</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #0a0a0a;
-            --bg-darker: #050505;
-            --purple-primary: #7b2cbf;
-            --purple-secondary: #9d4edd;
-            --purple-light: #c77dff;
-            --text-light: #f8f9fa;
-            --text-gray: #adb5bd;
+            --primary: #00a8ff;
+            --primary-dark: #0097e6;
+            --dark: #1e272e;
+            --darker: #2f3640;
+            --light: #f5f6fa;
+            --gray: #7f8fa6;
         }
-        
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-        }
-        
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Age Gate */
+        .age-gate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--dark);
             display: flex;
             flex-direction: column;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--purple-primary) 100%);
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            position: relative;
-            z-index: 10;
-        }
-        
-        .logo {
-            display: flex;
             align-items: center;
-            gap: 15px;
-        }
-        
-        .mushroom-logo {
-            width: 50px;
-            height: 50px;
-            animation: float 4s ease-in-out infinite;
-            filter: drop-shadow(0 0 8px rgba(123, 44, 191, 0.7));
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        h1 {
-            color: var(--text-light);
-            margin: 0;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(157, 78, 221, 0.8);
-        }
-        
-        .search-container {
-            padding: 1.5rem;
-            display: flex;
-            justify-content: center;
-            background-color: var(--bg-darker);
-        }
-        
-        .search-input {
-            width: 100%;
-            max-width: 600px;
-            padding: 12px 20px;
-            border-radius: 30px;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--text-light);
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
-        
-        .search-input:focus {
-            background-color: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 0 2px var(--purple-light);
-        }
-        
-        .search-input::placeholder {
-            color: var(--text-gray);
-        }
-        
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            padding: 2rem;
-            flex: 1;
-        }
-        
-        .video-card {
-            background: linear-gradient(145deg, var(--bg-darker) 0%, rgba(123, 44, 191, 0.1) 100%);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(123, 44, 191, 0.3);
-        }
-        
-        .video-thumbnail-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%;
-            background-color: rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-        }
-        
-        .video-thumbnail {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .video-card:hover .video-thumbnail {
-            transform: scale(1.05);
-        }
-        
-        .play-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .video-card:hover .play-icon {
-            opacity: 1;
-        }
-        
-        .play-icon::after {
-            content: '';
-            display: block;
-            width: 0;
-            height: 0;
-            border-top: 15px solid transparent;
-            border-bottom: 15px solid transparent;
-            border-left: 25px solid white;
-            margin-left: 5px;
-        }
-        
-        .video-info {
-            padding: 1.2rem;
-        }
-        
-        .video-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .video-description {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .video-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: var(--text-gray);
-            font-size: 0.85rem;
-        }
-        
-        .video-views::before {
-            content: '👁️';
-            margin-right: 5px;
-        }
-        
-        .video-likes {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .video-likes .like-icon {
-            font-size: 1.2rem;
-            color: var(--text-gray);
-        }
-        
-        .video-likes.liked .like-icon {
-            color: var(--purple-light);
-        }
-        
-        .video-date {
-            font-size: 0.8rem;
-            color: var(--text-gray);
-        }
-        
-        .video-author {
-            font-size: 0.75rem;
-            color: var(--purple-light);
-            margin-top: 0.5rem;
-        }
-        
-        .upload-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--purple-primary) 0%, var(--purple-secondary) 100%);
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(123, 44, 191, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-        
-        .upload-btn:hover {
-            transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 8px 25px rgba(157, 78, 221, 0.7);
-        }
-        
-        .upload-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        
-        .upload-modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-        
-        .upload-form {
-            background: linear-gradient(145deg, var(--bg-darker) 0%, rgba(123, 44, 191, 0.2) 100%);
-            border-radius: 15px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-        
-        .upload-modal.active .upload-form {
-            transform: translateY(0);
-        }
-        
-        .upload-form h2 {
-            margin-bottom: 1.5rem;
             text-align: center;
-            color: var(--purple-light);
+            padding: 20px;
         }
-        
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-gray);
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-light);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: var(--purple-light);
-            outline: none;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .file-input {
+
+        .age-gate.hidden {
             display: none;
         }
-        
-        .file-label {
-            display: block;
-            padding: 15px;
-            border: 2px dashed rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 30px;
+            object-fit: contain;
         }
-        
-        .file-label:hover {
-            border-color: var(--purple-light);
-            background-color: rgba(123, 44, 191, 0.1);
+
+        .age-gate h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: 1px;
         }
-        
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: linear-gradient(to right, var(--purple-primary), var(--purple-secondary));
-            color: white;
+
+        .age-gate p {
             font-size: 1rem;
-            font-weight: 600;
+            margin-bottom: 30px;
+            max-width: 500px;
+            color: var(--gray);
+        }
+
+        .age-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .age-btn {
+            padding: 12px 0;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 1rem;
+            font-weight: 600;
+            flex: 1;
         }
-        
-        .submit-btn:hover {
+
+        .age-btn.yes {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .age-btn.no {
+            background-color: transparent;
+            color: var(--light);
+            border: 2px solid var(--gray);
+        }
+
+        .age-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4);
         }
-        
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--text-gray);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: color 0.2s ease;
+
+        .age-btn.yes:hover {
+            background-color: var(--primary-dark);
         }
-        
-        .close-btn:hover {
-            color: var(--purple-light);
+
+        .age-btn.no:hover {
+            background-color: rgba(255, 255, 255, 0.05);
         }
-        
-        .video-player-modal {
+
+        /* Main Layout */
+        #mainContent {
+            display: none;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--darker);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo img {
+            width: 40px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .header-logo h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Video Player */
+        .video-player-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none;
             justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            align-items: center;
+            z-index: 99;
         }
-        
-        .video-player-modal.active {
-            opacity: 1;
-            pointer-events: all;
+
+        .video-player-container.active {
+            display: flex;
         }
-        
-        .video-player-container {
+
+        .video-player {
             width: 90%;
-            max-width: 1000px;
+            max-width: 900px;
             position: relative;
         }
-        
-        .video-player {
+
+        .video-player video {
             width: 100%;
-            border-radius: 8px;
+            border-radius: 5px;
             outline: none;
         }
-        
-        .custom-controls {
+
+        .close-player {
             position: absolute;
-            bottom: 0;
-            left: 0;
+            top: -40px;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 3px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-        
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(to right, var(--purple-primary), var(--purple-light));
-            border-radius: 3px;
-            width: 0%;
-            position: relative;
-        }
-        
-        .progress-bar::after {
-            content: '';
-            position: absolute;
-            right: -5px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 10px;
-            height: 10px;
-            background-color: white;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-        
-        .progress-container:hover .progress-bar::after {
-            opacity: 1;
-        }
-        
-        .player-close-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.5);
-            border: none;
+            background: none;
             color: white;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
         }
-        
-        .player-close-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+
+        .close-player:hover {
+            opacity: 1;
         }
-        
-        .loading {
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+        .video-card {
+            background-color: var(--darker);
+            border-radius: 5px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 160px;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            color: white;
+            font-size: 2rem;
+            background: rgba(0, 0, 0, 0.6);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-title {
+            padding: 12px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--darker);
+            padding: 20px;
             text-align: center;
-            padding: 2rem;
-            color: var(--text-gray);
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
-        
-        .upload-status {
-            text-align: center;
-            margin-top: 1rem;
-            color: var(--text-gray);
+
+        .telegram-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
             font-size: 0.9rem;
         }
-        
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
+
+        .telegram-link:hover {
+            background-color: var(--primary-dark);
         }
-        
-        .loading-text {
-            animation: pulse 1.5s infinite ease-in-out;
+
+        /* Loading */
+        .loading {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(0, 168, 255, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                padding: 15px;
+            }
+            
+            .video-thumbnail, .play-overlay {
+                height: 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .age-gate h1 {
+                font-size: 1.8rem;
+            }
+            
+            .age-buttons {
+                flex-direction: column;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-thumbnail, .play-overlay {
+                height: 200px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjN2EyY2JmIiBkPSJNMjU2IDMyYzEyMy41IDAgMjI0IDEwMC41IDIyNCAyMjRTMzc5LjUgNDgwIDI1NiA0ODBTMzIgMzc5LjUgMzIgMjU2IDEzMi41IDMyIDI1NiAzMnpNMTI4IDI1NmMwIDcwLjcgNTcuMyAxMjggMTI4IDEyOHMxMjgtNTcuMyAxMjgtMTI4LTU3LjMtMTI4LTEyOC0xMjgtMTI4IDU3LjMtMTI4IDEyOHptOTYgMGMwIDE3LjctMTQuMyAzMi0zMiAzMnMtMzItMTQuMy0zMi0zMiAxNC4zLTMyIDMyLTMyIDMyIDE0LjMgMzIgMzJ6Ii8+PHBhdGggZmlsbD0iI2Y4ZjlmYSIgZD0iTTI1NiAxMjhjLTcwLjcgMC0xMjggNTcuMy0xMjggMTI4czU3LjMgMTI4IDEyOCAxMjggMTI4LTU3LjMgMTI4LTEyOC01Ny4zLTEyOC0xMjgtMTI4em0wIDE2MGMtMTcuNyAwLTMyLTE0LjMtMzItMzJzMTQuMy0zMiAzMi0zMiAzMiAxNC4zIDMyIDMyLTE0LjMgMzItMzIgMzJ6Ii8+PC9zdmc+" alt="ShadowTube Logo" class="mushroom-logo">
-            <h1>ShadowTube</h1>
-        </div>
-    </header>
-    
-    <div class="search-container">
-        <input type="text" class="search-input" placeholder="Поиск видео..." id="search-input">
-    </div>
-    
-    <div class="video-grid" id="video-grid">
-        <div class="loading">
-            <div class="loading-text">Загрузка видео...</div>
-        </div>
-    </div>
-    
-    <button class="upload-btn" id="upload-btn">+</button>
-    
-    <div class="upload-modal" id="upload-modal">
-        <div class="upload-form">
-            <button class="close-btn" id="close-btn">&times;</button>
-            <h2>Загрузить видео</h2>
-            <form id="video-upload-form">
-                <div class="form-group">
-                    <label for="video-title">Название видео</label>
-                    <input type="text" id="video-title" class="form-control" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="video-description">Описание</label>
-                    <textarea id="video-description" class="form-control" rows="3"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="video-file">Видео файл</label>
-                    <input type="file" id="video-file" class="file-input" accept="video/*" required>
-                    <label for="video-file" class="file-label" id="file-label">
-                        Перетащите видео сюда или нажмите для выбора<br>
-                        <small>Максимальный размер: 100MB</small>
-                    </label>
-                </div>
-                
-                <div class="upload-status" id="upload-status"></div>
-                
-                <button type="submit" class="submit-btn">Опубликовать</button>
-            </form>
-        </div>
-    </div>
-    
-    <div class="video-player-modal" id="video-player-modal">
-        <div class="video-player-container">
-            <button class="player-close-btn" id="player-close-btn">&times;</button>
-            <video class="video-player" id="video-player" controls></video>
-            <div class="custom-controls">
-                <div class="progress-container" id="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-            </div>
+    <!-- Age Gate -->
+    <div class="age-gate" id="ageGate">
+        <img src="https://avatars.dzeninfra.ru/get-zen_brief/271828/pub_681e61bdf95c6a5647c921b1_681e61fd26518879777cce5e/scale_1200" alt="BrainRot Logo" class="logo">
+        <h1>BRAINROT</h1>
+        <p>Сайт содержит шокирующий контент. Только для лиц 18+</p>
+        <div class="age-buttons">
+            <button class="age-btn yes" id="confirmAge">Мне есть 18</button>
+            <button class="age-btn no" id="denyAge">Мне нет 18</button>
         </div>
     </div>
 
+    <!-- Main Content -->
+    <div id="mainContent">
+        <header>
+            <div class="header-logo">
+                <img src="https://avatars.dzeninfra.ru/get-zen_brief/271828/pub_681e61bdf95c6a5647c921b1_681e61fd26518879777cce5e/scale_1200" alt="BrainRot Logo">
+                <h1>BRAINROT</h1>
+            </div>
+        </header>
+
+        <!-- Video Player -->
+        <div class="video-player-container" id="videoPlayerContainer">
+            <div class="video-player">
+                <button class="close-player" id="closePlayer">&times;</button>
+                <video id="mainVideoPlayer" controls autoplay></video>
+            </div>
+        </div>
+
+        <!-- Video Grid -->
+        <div class="video-grid" id="videoGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+
+        <footer>
+            <a href="https://t.me/BRA1N_R0T/3?single" class="telegram-link" target="_blank">
+                <i class="fab fa-telegram"></i> Предложить видео
+            </a>
+        </footer>
+    </div>
+
     <script>
-        // Конфигурация GitHub (ЗАМЕНИТЕ ТОКЕН НА СВОЙ)
-        const GITHUB_USER = 'MRTACO666';
-        const REPO_NAME = 'shadowtube-data';
-        const DATA_FILE = 'videos.json';
-        const API_URL = `https://api.github.com/repos/${GITHUB_USER}/${REPO_NAME}/contents/${DATA_FILE}`;
-        const RAW_DATA_URL = `https://raw.githubusercontent.com/${GITHUB_USER}/${REPO_NAME}/main/${DATA_FILE}`;
-        const GITHUB_TOKEN = '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';
-        
-        // DOM элементы
-        const uploadBtn = document.getElementById('upload-btn');
-        const uploadModal = document.getElementById('upload-modal');
-        const closeBtn = document.getElementById('close-btn');
-        const videoUploadForm = document.getElementById('video-upload-form');
-        const videoGrid = document.getElementById('video-grid');
-        const searchInput = document.getElementById('search-input');
-        const fileLabel = document.getElementById('file-label');
-        const videoFileInput = document.getElementById('video-file');
-        const videoPlayerModal = document.getElementById('video-player-modal');
-        const videoPlayer = document.getElementById('video-player');
-        const playerCloseBtn = document.getElementById('player-close-btn');
-        const progressContainer = document.getElementById('progress-container');
-        const progressBar = document.getElementById('progress-bar');
-        const uploadStatus = document.getElementById('upload-status');
-        
-        // Текущее воспроизводимое видео
-        let currentVideo = null;
-        let currentUser = 'user_' + Math.random().toString(36).substr(2, 8);
-        
-        // Инициализация хранилища
-        async function initializeStorage() {
-            try {
-                const response = await fetch(RAW_DATA_URL + '?t=' + Date.now());
-                if (!response.ok) throw new Error('Файл не найден');
-                return await response.json();
-            } catch (error) {
-                console.log('Инициализация нового хранилища...');
-                const initialVideos = [
-                    {
-                        id: Date.now().toString(),
-                        title: "Добро пожаловать на ShadowTube!",
-                        description: "Первое видео на нашей платформе",
-                        views: 1,
-                        likes: 1,
-                        date: new Date().toISOString(),
-                        thumbnail: "",
-                        src: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-                        liked: false,
-                        author: "system"
-                    }
-                ];
-                await saveVideosToGitHub(initialVideos);
-                return initialVideos;
-            }
-        }
-        
-        // Сохранение видео в GitHub
-        async function saveVideosToGitHub(videos) {
-            try {
-                // Получаем текущий SHA файла (если существует)
-                let sha = null;
-                try {
-                    const response = await fetch(API_URL, {
-                        headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`
-                        }
-                    });
-                    if (response.ok) {
-                        const data = await response.json();
-                        sha = data.sha;
-                    }
-                } catch (e) {}
-                
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(videos, null, 2))));
-                const response = await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: 'Обновление видео данных',
-                        content: content,
-                        sha: sha
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Ошибка сохранения данных');
-                }
-                
-                return true;
-            } catch (error) {
-                console.error('Ошибка при сохранении на GitHub:', error);
-                // Локальное сохранение в случае ошибки
-                localStorage.setItem('shadowtube_offline_videos', JSON.stringify(videos));
-                return false;
-            }
-        }
-        
-        // Загрузка видео с GitHub
-        async function loadVideosFromGitHub() {
-            try {
-                const response = await fetch(RAW_DATA_URL + '?t=' + Date.now());
-                if (!response.ok) throw new Error('Ошибка загрузки');
-                return await response.json();
-            } catch (error) {
-                console.error('Ошибка загрузки с GitHub:', error);
-                // Пробуем загрузить локальные данные
-                const localData = localStorage.getItem('shadowtube_offline_videos');
-                return localData ? JSON.parse(localData) : [];
-            }
-        }
-        
-        // Форматирование чисел (1K, 1.2M и т.д.)
-        function formatNumber(num) {
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            }
-            if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
-            return num.toString();
-        }
-        
-        // Форматирование даты
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diff = now - date;
-            
-            const seconds = Math.floor(diff / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-            
-            if (days > 7) {
-                return date.toLocaleDateString();
-            } else if (days > 0) {
-                return `${days} ${days === 1 ? 'день' : days < 5 ? 'дня' : 'дней'} назад`;
-            } else if (hours > 0) {
-                return `${hours} ${hours === 1 ? 'час' : hours < 5 ? 'часа' : 'часов'} назад`;
-            } else if (minutes > 0) {
-                return `${minutes} ${minutes === 1 ? 'минуту' : minutes < 5 ? 'минуты' : 'минут'} назад`;
-            } else {
-                return 'только что';
-            }
-        }
-        
-        // Генерация превью из видео
-        function generateThumbnail(videoFile) {
-            return new Promise((resolve) => {
-                const video = document.createElement('video');
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                
-                video.src = URL.createObjectURL(videoFile);
-                
-                video.addEventListener('loadedmetadata', () => {
-                    video.currentTime = 0;
-                });
-                
-                video.addEventListener('seeked', () => {
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    
-                    canvas.toBlob((blob) => {
-                        const thumbnailUrl = URL.createObjectURL(blob);
-                        resolve({ blob, url: thumbnailUrl });
-                    }, 'image/jpeg', 0.8);
-                });
-                
-                video.load();
-            });
-        }
-        
-        // Отображение всех видео
-        async function displayVideos(videos) {
+        // Объявляем все DOM элементы в начале
+        const ageGate = document.getElementById('ageGate');
+        const confirmAgeBtn = document.getElementById('confirmAge');
+        const denyAgeBtn = document.getElementById('denyAge');
+        const mainContent = document.getElementById('mainContent');
+        const videoPlayerContainer = document.getElementById('videoPlayerContainer');
+        const mainVideoPlayer = document.getElementById('mainVideoPlayer');
+        const closePlayerBtn = document.getElementById('closePlayer');
+        const videoGrid = document.getElementById('videoGrid');
+
+        // Video data - все 50 видео
+        const videoData = [
+            { id: 1, url: 'https://videos.watchpeopledie.tv/1746795573MbLmafFZbU_4CQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 2, url: 'https://videos.watchpeopledie.tv/1746788723scUzBlTDjtNuJg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 3, url: 'https://videos.watchpeopledie.tv/1746743028tDLtDkIYSo_SJw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 4, url: 'https://videos.watchpeopledie.tv/1746803560qjAgFpByXEQPCA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 5, url: 'https://videos.watchpeopledie.tv/1746809652d2bhLqx-VLJAlQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 6, url: 'https://videos.watchpeopledie.tv/1746802021EqvGbXuO-u3BgA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 7, url: 'https://videos.watchpeopledie.tv/1746794053usKCY0mYiCGJew.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 8, url: 'https://videos.watchpeopledie.tv/1746813477v6FKw3NIu7G6bg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 9, url: 'https://videos.watchpeopledie.tv/1746776521Y_J8j4gxr1QU_w.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 10, url: 'https://videos.watchpeopledie.tv/1746771835p-xj0sLK4WvtGg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 11, url: 'https://videos.watchpeopledie.tv/1746805131tbhSZ0tIIb9xWg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 12, url: 'https://videos.watchpeopledie.tv/1746812201uHG5NeinCdr8Kg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 13, url: 'https://videos.watchpeopledie.tv/1746809509R0WzYxiD_cMMuQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 14, url: 'https://videos.watchpeopledie.tv/1746770867ECDL1ChRceAvbw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 15, url: 'https://videos.watchpeopledie.tv/1746742162pXqKMa2E3Q5OHg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 16, url: 'https://videos.watchpeopledie.tv/1746810912kgkVVfLvvP-L7w.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 17, url: 'https://videos.watchpeopledie.tv/1746809854BltlGcblbcLHhw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 18, url: 'https://videos.watchpeopledie.tv/1746765550qU_bAq5KDs9IpQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 19, url: 'https://videos.watchpeopledie.tv/1746811192NuP-rOu-87zpiQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 20, url: 'https://videos.watchpeopledie.tv/1746810746RJWR2w7RFxlmSw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 21, url: 'https://videos.watchpeopledie.tv/1746749049ZGWEy0qwFvQ3tQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 22, url: 'https://videos.watchpeopledie.tv/1746812613qN5HoNOsHQNpyQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 23, url: 'https://videos.watchpeopledie.tv/1746810447wpeoGDLuSrdtIA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 24, url: 'https://videos.watchpeopledie.tv/1746802439O1WHI70oH15n2g.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 25, url: 'https://videos.watchpeopledie.tv/1746804208j7XScX-mSn1IzQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 26, url: 'https://videos.watchpeopledie.tv/1746811859qowI0_GD7_mQgA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 27, url: 'https://videos.watchpeopledie.tv/17468095323Om9FDUxtSqsYw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 28, url: 'https://videos.watchpeopledie.tv/1746807194oetSv8efjLCiYA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 29, url: 'https://videos.watchpeopledie.tv/1746811150PfP-UvE4VmXadQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 30, url: 'https://videos.watchpeopledie.tv/1746789194cqF6di9TRIbDkg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 31, url: 'https://videos.watchpeopledie.tv/1746802961Xr3QnGodit201g.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 32, url: 'https://videos.watchpeopledie.tv/1746804621OlFZCFBCZaJbuQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 33, url: 'https://videos.watchpeopledie.tv/1746806740CY1A8R-EMR-caQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 34, url: 'https://videos.watchpeopledie.tv/1746794942ZKNTvHIrMYEx2Q.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 35, url: 'https://videos.watchpeopledie.tv/1746745018TkVRSBqDtWjEAg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 36, url: 'https://videos.watchpeopledie.tv/1746812137KkUn-YY3DaAtnw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 37, url: 'https://videos.watchpeopledie.tv/1746788973H3fO69SWSfSwTQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 38, url: 'https://videos.watchpeopledie.tv/1746811082eHlA2iKKYeu9nA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 39, url: 'https://videos.watchpeopledie.tv/1746787366elbOBd19s63aBw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 40, url: 'https://videos.watchpeopledie.tv/1746750455p_eymdl-E8uJ5Q.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 41, url: 'https://videos.watchpeopledie.tv/1746729240f6Kn-XYSBzwKng.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 42, url: 'https://videos.watchpeopledie.tv/1746802884E33Sd_FhEpak9A.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 43, url: 'https://videos.watchpeopledie.tv/1746810140N7Kams12Sg__Jg.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 44, url: 'https://videos.watchpeopledie.tv/1746810543EuAugZpyueZRSA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 45, url: 'https://videos.watchpeopledie.tv/1746811119n39ESbFpad5EuQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 46, url: 'https://videos.watchpeopledie.tv/1746755293Kq_ebnbTUnV4aw.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 47, url: 'https://videos.watchpeopledie.tv/1746802262Ik1-16uMLnnp7A.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 48, url: 'https://videos.watchpeopledie.tv/1746798589tLFAes7fFQ80LA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 49, url: 'https://videos.watchpeopledie.tv/1746786729XihVy_du7CwdMQ.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'},
+            { id: 50, url: 'https://videos.watchpeopledie.tv/1746800124VCl4MdKdLl8emA.mp4', thumbnail: 'https://i.ytimg.com/vi/C1AOZ4EZImU/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGBkgVyh_MA8=&rs=AOn4CLAezYFN9FOgWWAmG8X4v-qsQXaqnw'}
+        ];
+
+        // Load videos
+        function loadVideos() {
             videoGrid.innerHTML = '';
             
-            if (videos.length === 0) {
-                videoGrid.innerHTML = '<div class="loading">Ничего не найдено</div>';
-                return;
-            }
-            
-            videos.forEach(video => {
+            videoData.forEach(video => {
                 const videoCard = document.createElement('div');
                 videoCard.className = 'video-card';
-                videoCard.setAttribute('data-id', video.id);
-                videoCard.innerHTML = `
-                    <div class="video-thumbnail-container">
-                        <img class="video-thumbnail" src="${video.thumbnail || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjogIzBhMGEwYSI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiM3YTJjYmYiIG9wYWNpdHk9IjAuMSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZjhmOWZhIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAiPk5vIFByZXZpZXc8L3RleHQ+PC9zdmc+'}" alt="${video.title}">
-                        <div class="play-icon"></div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-description">${video.description}</p>
-                        <div class="video-stats">
-                            <span class="video-views">${formatNumber(video.views)}</span>
-                            <span class="video-likes ${video.liked ? 'liked' : ''}" data-id="${video.id}">
-                                <span class="like-icon">👍</span> ${formatNumber(video.likes)}
-                            </span>
-                        </div>
-                        <div class="video-date">${formatDate(video.date)}</div>
-                        ${video.author ? `<div class="video-author">@${video.author}</div>` : ''}
-                    </div>
-                `;
                 
-                const likeBtn = videoCard.querySelector('.video-likes');
-                likeBtn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const videoId = this.getAttribute('data-id');
-                    likeVideo(videoId);
-                });
+                // Thumbnail
+                const thumbnail = document.createElement('img');
+                thumbnail.className = 'video-thumbnail';
+                thumbnail.src = video.thumbnail;
+                thumbnail.alt = video.title || `Video ${video.id}`;
                 
-                videoCard.addEventListener('click', function() {
-                    const videoId = this.getAttribute('data-id');
-                    playVideo(videoId);
-                });
+                // Play overlay
+                const playOverlay = document.createElement('div');
+                playOverlay.className = 'play-overlay';
+                
+                const playIcon = document.createElement('i');
+                playIcon.className = 'fas fa-play play-icon';
+                
+                playOverlay.appendChild(playIcon);
+                
+                // Title
+                const title = document.createElement('div');
+                title.className = 'video-title';
+                title.textContent = video.title || ``;
+                
+                videoCard.appendChild(thumbnail);
+                videoCard.appendChild(playOverlay);
+                videoCard.appendChild(title);
+                
+                videoCard.addEventListener('click', () => playVideo(video.url));
                 
                 videoGrid.appendChild(videoCard);
             });
         }
-        
-        // Воспроизведение видео
-        async function playVideo(videoId) {
-            const videos = await loadVideosFromGitHub();
-            const video = videos.find(v => v.id === videoId);
-            
-            if (video) {
-                currentVideo = video;
-                videoPlayer.src = video.src;
-                videoPlayer.poster = video.thumbnail || '';
-                videoPlayerModal.classList.add('active');
-                videoPlayer.play();
-                
-                // Увеличиваем просмотры
-                await incrementViews(videoId);
-            }
+
+        // Play video
+        function playVideo(videoUrl) {
+            mainVideoPlayer.src = videoUrl;
+            videoPlayerContainer.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        
-        // Закрытие плеера
-        playerCloseBtn.addEventListener('click', () => {
-            videoPlayerModal.classList.remove('active');
-            videoPlayer.pause();
-        });
-        
-        // Обновление прогресс-бара
-        videoPlayer.addEventListener('timeupdate', () => {
-            const progress = (videoPlayer.currentTime / videoPlayer.duration) * 100;
-            progressBar.style.width = `${progress}%`;
-        });
-        
-        // Перемотка при клике на прогресс-бар
-        progressContainer.addEventListener('click', (e) => {
-            const rect = progressContainer.getBoundingClientRect();
-            const pos = (e.clientX - rect.left) / rect.width;
-            videoPlayer.currentTime = pos * videoPlayer.duration;
-        });
-        
-        // Увеличение просмотров
-        async function incrementViews(videoId) {
-            const videos = await loadVideosFromGitHub();
-            const videoIndex = videos.findIndex(v => v.id === videoId);
-            
-            if (videoIndex !== -1) {
-                videos[videoIndex].views += 1;
-                await saveVideosToGitHub(videos);
-                displayVideos(videos);
-            }
+
+        // Close video player
+        function closeVideoPlayer() {
+            videoPlayerContainer.classList.remove('active');
+            mainVideoPlayer.pause();
+            mainVideoPlayer.src = '';
+            document.body.style.overflow = 'auto';
         }
+
+        // Event listeners
+        closePlayerBtn.addEventListener('click', closeVideoPlayer);
         
-        // Лайк видео
-        async function likeVideo(videoId) {
-            const videos = await loadVideosFromGitHub();
-            const videoIndex = videos.findIndex(v => v.id === videoId);
-            
-            if (videoIndex !== -1) {
-                if (!videos[videoIndex].liked) {
-                    videos[videoIndex].likes += 1;
-                    videos[videoIndex].liked = true;
-                    await saveVideosToGitHub(videos);
-                    displayVideos(videos);
-                }
+        // Close when clicking outside video
+        videoPlayerContainer.addEventListener('click', (e) => {
+            if (e.target === videoPlayerContainer) {
+                closeVideoPlayer();
             }
-        }
-        
-        // Добавление нового видео
-        videoUploadForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const title = document.getElementById('video-title').value;
-            const description = document.getElementById('video-description').value;
-            const file = videoFileInput.files[0];
-            
-            if (!file) {
-                alert('Пожалуйста, выберите видео файл');
-                return;
-            }
-            
-            if (file.size > 100 * 1024 * 1024) {
-                alert('Файл слишком большой. Максимальный размер: 100MB');
-                return;
-            }
-            
-            uploadStatus.textContent = 'Генерация превью...';
-            uploadStatus.style.color = 'var(--text-gray)';
-            
-            try {
-                const { blob: thumbnailBlob, url: thumbnailUrl } = await generateThumbnail(file);
-                
-                const newVideo = {
-                    id: Date.now().toString(),
-                    title: title,
-                    description: description,
-                    views: 0,
-                    likes: 0,
-                    date: new Date().toISOString(),
-                    thumbnail: thumbnailUrl,
-                    src: URL.createObjectURL(file),
-                    liked: false,
-                    author: currentUser
-                };
-                
-                const videos = await loadVideosFromGitHub();
-                videos.unshift(newVideo);
-                
-                await saveVideosToGitHub(videos);
-                
-                videoUploadForm.reset();
-                fileLabel.textContent = "Перетащите видео сюда или нажмите для выбора\nМаксимальный размер: 100MB";
-                
-                uploadStatus.textContent = 'Видео успешно загружено!';
-                uploadStatus.style.color = 'var(--purple-light)';
-                
-                setTimeout(() => {
-                    uploadModal.classList.remove('active');
-                    uploadStatus.textContent = '';
-                }, 1000);
-                
-                displayVideos(videos);
-            } catch (error) {
-                console.error('Ошибка:', error);
-                uploadStatus.textContent = 'Ошибка при загрузке видео';
-                uploadStatus.style.color = '#ff6b6b';
-            }
-        });
-        
-        // Поиск видео
-        searchInput.addEventListener('input', async () => {
-            const searchTerm = searchInput.value.toLowerCase();
-            const videos = await loadVideosFromGitHub();
-            
-            if (searchTerm === '') {
-                displayVideos(videos);
-                return;
-            }
-            
-            const filteredVideos = videos.filter(video => 
-                video.title.toLowerCase().includes(searchTerm) || 
-                video.description.toLowerCase().includes(searchTerm) ||
-                (video.author && video.author.toLowerCase().includes(searchTerm))
-            );
-            
-            displayVideos(filteredVideos);
-        });
-        
-        // Инициализация при загрузке страницы
-        window.addEventListener('DOMContentLoaded', async () => {
-            const videos = await initializeStorage();
-            displayVideos(videos);
-            
-            // Обновляем список каждые 30 секунд
-            setInterval(async () => {
-                const newVideos = await loadVideosFromGitHub();
-                displayVideos(newVideos);
-            }, 30000);
         });
 
-        // Открытие/закрытие модальных окон
-        uploadBtn.addEventListener('click', () => {
-            uploadModal.classList.add('active');
-        });
-        
-        closeBtn.addEventListener('click', () => {
-            uploadModal.classList.remove('active');
-        });
-        
-        uploadModal.addEventListener('click', (e) => {
-            if (e.target === uploadModal) {
-                uploadModal.classList.remove('active');
+        // Close with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVideoPlayer();
             }
         });
-        
-        videoPlayerModal.addEventListener('click', (e) => {
-            if (e.target === videoPlayerModal) {
-                videoPlayerModal.classList.remove('active');
-                videoPlayer.pause();
-            }
+
+        // Age verification
+        confirmAgeBtn.addEventListener('click', () => {
+            localStorage.setItem('ageVerified', 'true');
+            ageGate.classList.add('hidden');
+            mainContent.style.display = 'block';
+            loadVideos();
         });
-        
-        // Обработка перетаскивания файлов
-        fileLabel.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            fileLabel.style.borderColor = 'var(--purple-light)';
-            fileLabel.style.backgroundColor = 'rgba(123, 44, 191, 0.1)';
+
+        denyAgeBtn.addEventListener('click', () => {
+            window.location.href = 'https://www.google.com';
         });
-        
-        fileLabel.addEventListener('dragleave', () => {
-            fileLabel.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            fileLabel.style.backgroundColor = 'transparent';
-        });
-        
-        fileLabel.addEventListener('drop', (e) => {
-            e.preventDefault();
-            fileLabel.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            fileLabel.style.backgroundColor = 'transparent';
-            
-            if (e.dataTransfer.files.length) {
-                videoFileInput.files = e.dataTransfer.files;
-                fileLabel.textContent = e.dataTransfer.files[0].name;
-            }
-        });
+
+        // Check age on load
+        if (localStorage.getItem('ageVerified') === 'true') {
+            ageGate.classList.add('hidden');
+            mainContent.style.display = 'block';
+            loadVideos();
+        }
     </script>
 </body>
-    </html>
+</html>
